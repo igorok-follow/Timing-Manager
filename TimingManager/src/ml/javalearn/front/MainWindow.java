@@ -40,6 +40,7 @@ public class MainWindow extends JFrame {
         setSize(1280, 1024);
         setMinimumSize(new Dimension(800, 600));
         setTitle("Timing Manager");
+        setVisible(true);
     }
 
 }

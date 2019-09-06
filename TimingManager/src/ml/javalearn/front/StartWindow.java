@@ -2,6 +2,8 @@ package ml.javalearn.front;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class StartWindow extends JFrame {
 
@@ -9,7 +11,7 @@ public class StartWindow extends JFrame {
     private JButton acceptSettings, cancel;
     private JTextField rows, cols;
     private JLabel rowsLabel, colsLabel;
-    private Font fontForLabels = new Font("Arial", 16, Font.PLAIN);
+    private Font fontForLabels = new Font("Arial", Font.BOLD, 16);
 
     StartWindow() {
         initFrame();
@@ -17,7 +19,9 @@ public class StartWindow extends JFrame {
         setButtons();
         setLabels();
         setTextFields();
+        setActions();
     }
+
 
     private void setButtons() {
         acceptSettings = new JButton("Ok");
@@ -30,25 +34,28 @@ public class StartWindow extends JFrame {
     }
 
     private void setLabels() {
-        contentPanel.add(new Labels(95, 50, "Tune Settings", "Test"));
+        contentPanel.add(new Labels(90, 50, "Tune Settings", "Test", fontForLabels));
 
         rowsLabel = new JLabel("Amount a rows:");
-//        rowsLabel.setFont(fontForLabels);
+        rowsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
+        rowsLabel.setBounds(90, 85, 150, 20);
 
         colsLabel = new JLabel("Amount a cols:");
-//        colsLabel.setFont(fontForLabels);
+        colsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
+        colsLabel.setBounds(90, 65, 150, 150);
+
+
+        contentPanel.add(rowsLabel);
+        contentPanel.add(colsLabel);
     }
 
     private void setTextFields() {
         rows = new JTextField(50);
-        rows.setBounds(70, 110, 150, 20);
-        rowsLabel.setBounds(90, 120, 150, 20);
-        contentPanel.add(rowsLabel);
-
-        contentPanel.add(colsLabel);
+        rows.setText("rows");
+        rows.setBounds(70, 105, 150, 20);
 
         cols = new JTextField(50);
-        cols.setBounds(70, 80, 150, 20);
+        cols.setBounds(70, 150, 150, 20);
 
         contentPanel.add(rows);
         contentPanel.add(cols);
@@ -58,6 +65,21 @@ public class StartWindow extends JFrame {
         contentPanel = new JPanel();
         contentPanel.setLayout(null);
         getContentPane().add(contentPanel);
+    }
+
+    private void setActions() {
+//        acceptSettings.addActionListener(e -> {
+//            mainWindow.rows = Integer.parseInt(rows.getText());
+//            System.out.println(mainWindow.rows = Integer.parseInt(rows.getText()));
+//            mainWindow.cols = Integer.parseInt(cols.getText());
+//            System.out.println(mainWindow.cols = Integer.parseInt(cols.getText()));
+//            setVisible(false);
+//            new MainWindow();
+//        });
+
+        cancel.addActionListener(e -> {
+            System.exit(0);
+        });
     }
 
     private void initFrame() {
