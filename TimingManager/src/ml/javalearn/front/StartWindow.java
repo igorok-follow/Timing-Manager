@@ -34,7 +34,7 @@ public class StartWindow extends JFrame {
     }
 
     private void setLabels() {
-        contentPanel.add(new Labels(90, 50, "Tune Settings", "Test", fontForLabels));
+        contentPanel.add(new Labels(90, 50, "Tune Settings", fontForLabels));
 
         rowsLabel = new JLabel("Amount a rows:");
         rowsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
@@ -51,7 +51,6 @@ public class StartWindow extends JFrame {
 
     private void setTextFields() {
         rows = new JTextField(50);
-        rows.setText("rows");
         rows.setBounds(70, 105, 150, 20);
 
         cols = new JTextField(50);
@@ -68,14 +67,18 @@ public class StartWindow extends JFrame {
     }
 
     private void setActions() {
-//        acceptSettings.addActionListener(e -> {
-//            mainWindow.rows = Integer.parseInt(rows.getText());
-//            System.out.println(mainWindow.rows = Integer.parseInt(rows.getText()));
-//            mainWindow.cols = Integer.parseInt(cols.getText());
-//            System.out.println(mainWindow.cols = Integer.parseInt(cols.getText()));
-//            setVisible(false);
-//            new MainWindow();
-//        });
+        acceptSettings.addActionListener(e -> {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.rows = Integer.parseInt(rows.getText());
+            System.out.println("Number of entered rows: " + mainWindow.rows);
+            mainWindow.cols = Integer.parseInt(cols.getText());
+            System.out.println("Number of entered cols: " + mainWindow.cols);
+            setVisible(false);
+            System.out.println("Start window was closed");
+            mainWindow.mainMethod();
+            System.out.println("Main method was completed");
+            mainWindow.setVisible(true);
+        });
 
         cancel.addActionListener(e -> {
             System.exit(0);
