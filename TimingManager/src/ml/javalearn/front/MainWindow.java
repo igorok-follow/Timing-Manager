@@ -2,11 +2,15 @@ package ml.javalearn.front;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileWriter;
+import java.io.IOException;
 
 class MainWindow extends JFrame {
 
     private JPanel gridPanel;
     private JPanel contentPanel;
+    private JToolBar toolBar;
+    private JToolBar toolBar1;
 
     int cols;
     int rows;
@@ -17,25 +21,59 @@ class MainWindow extends JFrame {
 
     }
 
-    void mainMethod() {
+    void mainMethod() throws IOException {
+        setSecondPlusController();
         initFrame();
+        setToolBar();
         setContentPanel();
         setGridPanel();
     }
 
+    private void setSecondPlusController() throws IOException {
+        FileWriter fileWriter = new FileWriter("checker.txt");
+        fileWriter.write("1");
+        fileWriter.flush();
+        fileWriter.close();
+
+        new CheckEarlierCreations().reader();
+    }
+
     private void setContentPanel() {
         contentPanel = new JPanel();
-        contentPanel.setLayout(new FlowLayout());
+        contentPanel.setLayout(new BorderLayout());
     }
 
     private void setGridPanel() {
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(rows, cols, 0, 0));
         gridPanel.setBackground(new Color(189, 189, 189));
-        gridPanel.setPreferredSize(new Dimension(this.getWidth() - 100, this.getHeight() - 100));
+//        gridPanel.setPreferredSize(new Dimension(this.getWidth() - 100, this.getHeight() - 100));
         spawnLabels();
-        contentPanel.add(gridPanel);
+        System.out.println("\n");
+//        contentPanel.add(gridPanel);
+//        gridPanel.add(contentPanel);
+//        getContentPane().add(gridPanel);
+
+        JPanel test = new JPanel();
+        test.add(toolBar1);
+        contentPanel.add(test, BorderLayout.WEST);
+
+        contentPanel.add(gridPanel, BorderLayout.CENTER);
+
+        JPanel test1 = new JPanel();
+        test1.add(toolBar);
+        contentPanel.add(test1, BorderLayout.EAST);
+
         getContentPane().add(contentPanel);
+    }
+
+    private void setToolBar() {
+        toolBar = new JToolBar();
+        toolBar1 = new JToolBar();
+        toolBar1.add(new JButton("test"));
+        JButton button = new JButton(new ImageIcon("set.png"));
+        toolBar.add(button);
+
     }
 
     private void spawnLabels() {

@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class StartWindow extends JFrame {
 
@@ -21,7 +24,6 @@ public class StartWindow extends JFrame {
         setTextFields();
         setActions();
     }
-
 
     private void setButtons() {
         acceptSettings = new JButton("Ok");
@@ -75,9 +77,15 @@ public class StartWindow extends JFrame {
             System.out.println("Number of entered cols: " + mainWindow.cols);
             setVisible(false);
             System.out.println("Start window was closed");
-            mainWindow.mainMethod();
+            try {
+                mainWindow.mainMethod();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             System.out.println("Main method was completed");
             mainWindow.setVisible(true);
+
+
         });
 
         cancel.addActionListener(e -> {
