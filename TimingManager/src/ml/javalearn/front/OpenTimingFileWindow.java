@@ -2,12 +2,19 @@ package ml.javalearn.front;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class OpenTimingFileWindow extends JFrame {
 
     JList list = new JList();
+    ArrayList<String> arrayList = new ArrayList<>();
+
 
     OpenTimingFileWindow() {
+
+    }
+
+    void mainMethodOpenTimingFile() {
         initFrame();
     }
 

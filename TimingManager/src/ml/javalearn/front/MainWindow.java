@@ -14,6 +14,7 @@ class MainWindow extends JFrame {
 
     int cols;
     int rows;
+    String fileName;
     private int amountCells;
     private int counter = 0;
 
@@ -47,12 +48,8 @@ class MainWindow extends JFrame {
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(rows, cols, 0, 0));
         gridPanel.setBackground(new Color(189, 189, 189));
-//        gridPanel.setPreferredSize(new Dimension(this.getWidth() - 100, this.getHeight() - 100));
         spawnLabels();
         System.out.println("\n");
-//        contentPanel.add(gridPanel);
-//        gridPanel.add(contentPanel);
-//        getContentPane().add(gridPanel);
 
         JPanel test = new JPanel();
         test.add(toolBar1);
@@ -96,7 +93,7 @@ class MainWindow extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(1280, 1024);
         setMinimumSize(new Dimension(800, 600));
-        setTitle("Timing Manager");
+        setTitle("Timing Manager [" + fileName + "]");
     }
 
 }

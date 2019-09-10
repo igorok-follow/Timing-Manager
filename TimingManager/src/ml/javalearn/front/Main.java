@@ -21,9 +21,14 @@ public class Main {
             }
 
             if (checkEarlierCreations.checkEarlierCreations == 1) {
-                new OpenTimingFileWindow();
+                new OpenTimingFileWindow().mainMethodOpenTimingFile();
             } else if (checkEarlierCreations.checkEarlierCreations == 0){
-                new StartWindow();
+                try {
+                    new StartWindow();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
 
         });

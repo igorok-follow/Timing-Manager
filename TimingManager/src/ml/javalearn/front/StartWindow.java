@@ -2,9 +2,6 @@ package ml.javalearn.front;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -12,11 +9,11 @@ public class StartWindow extends JFrame {
 
     private JPanel contentPanel;
     private JButton acceptSettings, cancel;
-    private JTextField rows, cols;
-    private JLabel rowsLabel, colsLabel;
+    private JTextField rows, cols, fileNameField;
     private Font fontForLabels = new Font("Arial", Font.BOLD, 16);
+    String fileName, data;
 
-    StartWindow() {
+    StartWindow() throws IOException {
         initFrame();
         setContentPanel();
         setButtons();
@@ -36,30 +33,38 @@ public class StartWindow extends JFrame {
     }
 
     private void setLabels() {
-        contentPanel.add(new Labels(90, 50, "Tune Settings", fontForLabels));
+        contentPanel.add(new Labels(90, 30, "Tune Settings", fontForLabels));
 
-        rowsLabel = new JLabel("Amount a rows:");
+        JLabel rowsLabel = new JLabel("Amount a rows:");
         rowsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
-        rowsLabel.setBounds(90, 85, 150, 20);
+        rowsLabel.setBounds(90, 65, 150, 20);
 
-        colsLabel = new JLabel("Amount a cols:");
+        JLabel colsLabel = new JLabel("Amount a cols:");
         colsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
-        colsLabel.setBounds(90, 65, 150, 150);
+        colsLabel.setBounds(90, 45, 150, 150);
 
+        JLabel fileNameLabel = new JLabel("    File name:");
+        fileNameLabel.setFont(new Font("Italic", Font.PLAIN, 16));
+        fileNameLabel.setBounds(90, 85, 150, 150);
 
         contentPanel.add(rowsLabel);
         contentPanel.add(colsLabel);
+        contentPanel.add(fileNameLabel);
     }
 
     private void setTextFields() {
         rows = new JTextField(50);
-        rows.setBounds(70, 105, 150, 20);
+        rows.setBounds(70, 85, 150, 20);
 
         cols = new JTextField(50);
-        cols.setBounds(70, 150, 150, 20);
+        cols.setBounds(70, 130, 150, 20);
+
+        fileNameField = new JTextField(50);
+        fileNameField.setBounds(70, 175, 150, 20);
 
         contentPanel.add(rows);
         contentPanel.add(cols);
+        contentPanel.add(fileNameField);
     }
 
     private void setContentPanel() {
@@ -77,6 +82,18 @@ public class StartWindow extends JFrame {
             System.out.println("Number of entered cols: " + mainWindow.cols);
             setVisible(false);
             System.out.println("Start window was closed");
+
+            fileName = fileNameField.getText();
+
+            data = rows.getText() + "/" + cols.getText() + "/" + fileName;
+            mainWindow.fileName = fileName;
+
+            try {
+                createProject();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
             try {
                 mainWindow.mainMethod();
             } catch (IOException ex) {
@@ -85,12 +102,16 @@ public class StartWindow extends JFrame {
             System.out.println("Main method was completed");
             mainWindow.setVisible(true);
 
-
         });
 
-        cancel.addActionListener(e -> {
-            System.exit(0);
-        });
+        cancel.addActionListener(e -> System.exit(0));
+    }
+
+    private void createProject() throws IOException {
+        FileWriter writer = new FileWriter(fileName + ".txt");
+        writer.write(data);
+        writer.flush();
+        writer.close();
     }
 
     private void initFrame() {
