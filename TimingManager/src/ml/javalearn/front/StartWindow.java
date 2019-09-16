@@ -2,16 +2,15 @@ package ml.javalearn.front;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class StartWindow extends JFrame {
 
     private JPanel contentPanel;
-    private JButton acceptSettings, cancel;
+    private JButton acceptSettings, cancel, saveProject;
     private JTextField rows, cols, fileNameField;
     private Font fontForLabels = new Font("Arial", Font.BOLD, 16);
-    String fileName, data;
+    private String fileName, data;
 
     StartWindow() throws IOException {
         initFrame();
@@ -75,24 +74,25 @@ public class StartWindow extends JFrame {
 
     private void setActions() {
         acceptSettings.addActionListener(e -> {
+
+            int rowsInt = Integer.parseInt(rows.getText());
+            int colsInt = Integer.parseInt(cols.getText());
+
             MainWindow mainWindow = new MainWindow();
-            mainWindow.rows = Integer.parseInt(rows.getText());
+            mainWindow.rows = rowsInt;
             System.out.println("Number of entered rows: " + mainWindow.rows);
-            mainWindow.cols = Integer.parseInt(cols.getText());
+            mainWindow.cols = colsInt;
             System.out.println("Number of entered cols: " + mainWindow.cols);
+            int amount = rowsInt * colsInt;
+            mainWindow.textFieldsSize = amount * 3;
+            mainWindow.panelsSize     = amount;
             setVisible(false);
             System.out.println("Start window was closed");
 
             fileName = fileNameField.getText();
 
-            data = rows.getText() + "/" + cols.getText() + "/" + fileName;
+            mainWindow.data = rows.getText() + "/" + cols.getText() + "/" + fileName;
             mainWindow.fileName = fileName;
-
-            try {
-                createProject();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
 
             try {
                 mainWindow.mainMethod();
@@ -105,13 +105,6 @@ public class StartWindow extends JFrame {
         });
 
         cancel.addActionListener(e -> System.exit(0));
-    }
-
-    private void createProject() throws IOException {
-        FileWriter writer = new FileWriter(fileName + ".txt");
-        writer.write(data);
-        writer.flush();
-        writer.close();
     }
 
     private void initFrame() {

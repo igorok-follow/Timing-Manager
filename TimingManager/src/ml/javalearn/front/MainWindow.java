@@ -12,11 +12,10 @@ class MainWindow extends JFrame {
     private JToolBar toolBar;
     private JToolBar toolBar1;
 
-    int cols;
-    int rows;
-    String fileName;
-    private int amountCells;
-    private int counter = 0;
+    int cols, rows, panelsSize, textFieldsSize;
+    String fileName, data;
+
+    private JPanel[] panels;
 
     MainWindow() {
 
@@ -24,10 +23,24 @@ class MainWindow extends JFrame {
 
     void mainMethod() throws IOException {
         setSecondPlusController();
+        System.out.println("checker worked");
         initFrame();
+        System.out.println("init frame");
         setToolBar();
+        System.out.println("set tool bar");
         setContentPanel();
+        System.out.println("set content panel");
         setGridPanel();
+        System.out.println("set grid panel");
+        createProject();
+        System.out.println("project was created");
+    }
+
+    private void createProject() throws IOException {
+        FileWriter writer = new FileWriter("src/ml/javalearn/tables/" + fileName + ".txt");
+        writer.write(data);
+        writer.flush();
+        writer.close();
     }
 
     private void setSecondPlusController() throws IOException {
@@ -48,7 +61,8 @@ class MainWindow extends JFrame {
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(rows, cols, 0, 0));
         gridPanel.setBackground(new Color(189, 189, 189));
-        spawnLabels();
+        spawnPanels();
+        spawnFields();
         System.out.println("\n");
 
         JPanel test = new JPanel();
@@ -70,22 +84,52 @@ class MainWindow extends JFrame {
         toolBar1.add(new JButton("test"));
         JButton button = new JButton(new ImageIcon("set.png"));
         toolBar.add(button);
-
     }
 
-    private void spawnLabels() {
+    private void spawnPanels() {
+
+        panels = new JPanel[panelsSize];
+
+        int counter = 0;
+
+        System.out.println("\nSpawning Panels...");
         System.out.println("Number of transferred rows: " + rows);
         System.out.println("Number of transferred cols: " + cols);
+        System.out.println("Number of will spawned cells: " + panels.length);
 
-        amountCells = rows * cols;
-        System.out.println("Amount of cells: " + amountCells);
+        for (int i = 0; i < panels.length; i++) {
+            Panels panelss = new Panels();
+            panels[i] = panelss;
+            panels[i].setBackground(Color.CYAN);
+            gridPanel.add(panelss);
+            System.out.println(counter + "cycle was passed");
+        }
 
-        for (int i = 0; i < amountCells; i++) {
+        gridPanel.add(panels[1]);
+
+        System.out.println("Completed");
+    }
+
+    private void spawnFields() {
+        JTextField[] textFields = new JTextField[textFieldsSize];
+
+        int counter = 0;
+
+        System.out.println("Amount of will spawned fields: " + rows * cols * 3);
+        System.out.println("Spawning Fields on Panels...");
+
+        for (int i = 0; i < rows * cols * 3; i++) {
+            Fields fields = new Fields();
+            textFields[i] = fields;
+        }
+
+        for (int i = 0; i < rows * cols; i++) {
+            panels[i].add(textFields[counter]);
             counter++;
-            gridPanel.add(new Labels("", "",
-                    new Font("Arial", Font.PLAIN, 12)
-            ));
-            System.out.println(counter + " cycle was passed...");
+            panels[i].add(textFields[counter]);
+            counter++;
+            panels[i].add(textFields[counter]);
+            counter++;
         }
     }
 

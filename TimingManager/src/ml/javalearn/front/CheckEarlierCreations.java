@@ -11,9 +11,6 @@ class CheckEarlierCreations {
     void reader() throws IOException {
         FileReader fileReader = new FileReader("checker.txt");
         Scanner scanner = new Scanner(fileReader);
-
-//        fileReader.close();
-
         checkEarlierCreations = scanner.nextInt();
         System.out.println("content of checker.txt: " + checkEarlierCreations);
     }
