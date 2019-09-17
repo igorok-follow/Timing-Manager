@@ -6,7 +6,8 @@ import java.awt.*;
 public class Panels extends JPanel {
 
     Panels() {
-        setLayout(new GridLayout(3, 1, 2, 2));
+        setLayout(new GridLayout(3, 1, 0, 0));
+        setBackground(Color.BLACK);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 

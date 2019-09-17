@@ -100,10 +100,12 @@ class MainWindow extends JFrame {
         for (int i = 0; i < panels.length; i++) {
             Panels panelss = new Panels();
             panels[i] = panelss;
-            panels[i].setBackground(Color.CYAN);
             gridPanel.add(panelss);
-            System.out.println(counter + "cycle was passed");
+            counter++;
+            System.out.println(counter + " cycle was passed");
         }
+
+        System.out.println("\nPanels was spawned");
 
         gridPanel.add(panels[1]);
 
@@ -116,11 +118,12 @@ class MainWindow extends JFrame {
         int counter = 0;
 
         System.out.println("Amount of will spawned fields: " + rows * cols * 3);
-        System.out.println("Spawning Fields on Panels...");
 
+        System.out.println("Fill the textFields array: \n");
         for (int i = 0; i < rows * cols * 3; i++) {
             Fields fields = new Fields();
             textFields[i] = fields;
+            System.out.println((i+1) + " cycle was completed");
         }
 
         for (int i = 0; i < rows * cols; i++) {
@@ -131,6 +134,9 @@ class MainWindow extends JFrame {
             panels[i].add(textFields[counter]);
             counter++;
         }
+
+        System.out.println("\nTextFields was spawned");
+
     }
 
     private void initFrame() {
