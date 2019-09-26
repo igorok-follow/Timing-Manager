@@ -1,7 +1,6 @@
 package ml.javalearn.front;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public class Main {
 
@@ -9,28 +8,9 @@ public class Main {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         System.out.println("Start logs: \n");
-
-        CheckEarlierCreations checkEarlierCreations = new CheckEarlierCreations();
-
         SwingUtilities.invokeLater(() -> {
-
-            try {
-                checkEarlierCreations.reader();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (checkEarlierCreations.checkEarlierCreations == 1) {
-                new OpenTimingFileWindow().mainMethodOpenTimingFile();
-            } else if (checkEarlierCreations.checkEarlierCreations == 0){
-                try {
-                    new StartWindow();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
+            ProjectManager projectManager = new ProjectManager();
+            projectManager.mainMethod();
         });
     }
 

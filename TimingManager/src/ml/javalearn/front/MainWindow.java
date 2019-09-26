@@ -11,9 +11,11 @@ class MainWindow extends JFrame {
     private JPanel contentPanel;
     private JToolBar toolBar;
     private JToolBar toolBar1;
-
+    private JButton setEditables, settings, save;
+    private String saveData = "";
     int cols, rows, panelsSize, textFieldsSize;
     String fileName, data;
+    private JTextField[] textFields;
 
     private JPanel[] panels;
 
@@ -21,9 +23,7 @@ class MainWindow extends JFrame {
 
     }
 
-    void mainMethod() throws IOException {
-        setSecondPlusController();
-        System.out.println("checker worked");
+    void mainMethod() {
         initFrame();
         System.out.println("init frame");
         setToolBar();
@@ -32,24 +32,18 @@ class MainWindow extends JFrame {
         System.out.println("set content panel");
         setGridPanel();
         System.out.println("set grid panel");
-        createProject();
-        System.out.println("project was created");
+        setSecondaryComponents();
+        System.out.println("set scndr components");
+        setActions();
     }
 
-    private void createProject() throws IOException {
+    void createProject() throws IOException {
         FileWriter writer = new FileWriter("src/ml/javalearn/tables/" + fileName + ".txt");
+        System.out.println(data);
         writer.write(data);
         writer.flush();
         writer.close();
-    }
-
-    private void setSecondPlusController() throws IOException {
-        FileWriter fileWriter = new FileWriter("checker.txt");
-        fileWriter.write("1");
-        fileWriter.flush();
-        fileWriter.close();
-
-        new CheckEarlierCreations().reader();
+        System.out.println("project was created");
     }
 
     private void setContentPanel() {
@@ -80,10 +74,9 @@ class MainWindow extends JFrame {
 
     private void setToolBar() {
         toolBar = new JToolBar();
+        toolBar.setOrientation(SwingConstants.VERTICAL);
         toolBar1 = new JToolBar();
-        toolBar1.add(new JButton("test"));
-        JButton button = new JButton(new ImageIcon("set.png"));
-        toolBar.add(button);
+        toolBar1.setOrientation(SwingConstants.VERTICAL);
     }
 
     private void spawnPanels() {
@@ -106,14 +99,11 @@ class MainWindow extends JFrame {
         }
 
         System.out.println("\nPanels was spawned");
-
-        gridPanel.add(panels[1]);
-
         System.out.println("Completed");
     }
 
     private void spawnFields() {
-        JTextField[] textFields = new JTextField[textFieldsSize];
+         textFields = new JTextField[textFieldsSize];
 
         int counter = 0;
 
@@ -139,11 +129,50 @@ class MainWindow extends JFrame {
 
     }
 
+    private void saveProject() throws IOException {
+        for (JTextField textField : textFields) {
+            saveData += textField.getText() + "/";
+        }
+
+        FileWriter fileWriter = new FileWriter("src/ml/javalearn/filesSaver/" + fileName);
+        fileWriter.write(saveData);
+        fileWriter.close();
+        System.out.println(saveData);
+    }
+
+    private void setSecondaryComponents() {
+        settings     = new JButton(new ImageIcon("set.png"));
+        setEditables = new JButton("Edit");
+        save = new JButton("Save");
+        toolBar.add(settings);
+        toolBar1.add(setEditables);
+        toolBar1.add(save);
+    }
+
+    private void setActions() {
+        settings.addActionListener(e -> {
+
+        });
+
+        setEditables.addActionListener(e -> {
+
+        });
+
+        save.addActionListener(e -> {
+            try {
+                saveProject();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
     private void initFrame() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setSize(1280, 1024);
         setMinimumSize(new Dimension(800, 600));
         setTitle("Timing Manager [" + fileName + "]");
+        setVisible(true);
     }
 
 }

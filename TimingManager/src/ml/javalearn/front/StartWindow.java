@@ -4,15 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class StartWindow extends JFrame {
+class StartWindow extends JFrame {
 
     private JPanel contentPanel;
-    private JButton acceptSettings, cancel, saveProject;
+    private JButton acceptSettings, cancel;
     private JTextField rows, cols, fileNameField;
-    private Font fontForLabels = new Font("Arial", Font.BOLD, 16);
-    private String fileName, data;
+    private String fileName;
 
-    StartWindow() throws IOException {
+    StartWindow() {
         initFrame();
         setContentPanel();
         setButtons();
@@ -32,7 +31,8 @@ public class StartWindow extends JFrame {
     }
 
     private void setLabels() {
-        contentPanel.add(new Labels(90, 30, "Tune Settings", fontForLabels));
+        JLabel label = new JLabel("Tune Settings");
+        label.setBounds(90, 30, 100, 30);
 
         JLabel rowsLabel = new JLabel("Amount a rows:");
         rowsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
@@ -96,6 +96,7 @@ public class StartWindow extends JFrame {
 
             try {
                 mainWindow.mainMethod();
+                mainWindow.createProject();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -105,6 +106,7 @@ public class StartWindow extends JFrame {
         });
 
         cancel.addActionListener(e -> System.exit(0));
+
     }
 
     private void initFrame() {
