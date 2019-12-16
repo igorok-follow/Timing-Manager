@@ -8,7 +8,7 @@ class StartWindow extends JFrame {
 
     private JPanel contentPanel;
     private JButton acceptSettings, cancel;
-    private JTextField rows, cols, fileNameField;
+    private JTextField rows, fileNameField;
     private String fileName;
 
     StartWindow() {
@@ -38,16 +38,11 @@ class StartWindow extends JFrame {
         rowsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
         rowsLabel.setBounds(90, 65, 150, 20);
 
-        JLabel colsLabel = new JLabel("Amount a cols:");
-        colsLabel.setFont(new Font("Italic", Font.PLAIN, 16));
-        colsLabel.setBounds(90, 45, 150, 150);
-
         JLabel fileNameLabel = new JLabel("    File name:");
         fileNameLabel.setFont(new Font("Italic", Font.PLAIN, 16));
         fileNameLabel.setBounds(90, 85, 150, 150);
 
         contentPanel.add(rowsLabel);
-        contentPanel.add(colsLabel);
         contentPanel.add(fileNameLabel);
     }
 
@@ -55,14 +50,11 @@ class StartWindow extends JFrame {
         rows = new JTextField(50);
         rows.setBounds(70, 85, 150, 20);
 
-        cols = new JTextField(50);
-        cols.setBounds(70, 130, 150, 20);
 
         fileNameField = new JTextField(50);
         fileNameField.setBounds(70, 175, 150, 20);
 
         contentPanel.add(rows);
-        contentPanel.add(cols);
         contentPanel.add(fileNameField);
     }
 
@@ -76,14 +68,12 @@ class StartWindow extends JFrame {
         acceptSettings.addActionListener(e -> {
 
             int rowsInt = Integer.parseInt(rows.getText());
-            int colsInt = Integer.parseInt(cols.getText());
 
             MainWindow mainWindow = new MainWindow();
             mainWindow.rows = rowsInt;
             System.out.println("Number of entered rows: " + mainWindow.rows);
-            mainWindow.cols = colsInt;
-            System.out.println("Number of entered cols: " + mainWindow.cols);
-            int amount = rowsInt * colsInt;
+            System.out.println("Number of entered cols: 7");
+            int amount = rowsInt * 7;
             mainWindow.textFieldsSize = amount * 3;
             mainWindow.panelsSize     = amount;
             setVisible(false);
@@ -91,12 +81,12 @@ class StartWindow extends JFrame {
 
             fileName = fileNameField.getText();
 
-            mainWindow.data = rows.getText() + "/" + cols.getText() + "/" + fileName;
+            mainWindow.data = rows.getText() + "/7/" + fileName;
             mainWindow.fileName = fileName;
 
             try {
-                mainWindow.mainMethod();
                 mainWindow.createProject();
+                mainWindow.mainMethod();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
