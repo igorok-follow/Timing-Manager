@@ -34,9 +34,7 @@ class MainWindow extends JFrame {
     private JButton acceptBtn = new JButton("Set timing");
     private JButton cancelBtn = new JButton("Cancel");
 
-    MainWindow() {
-        System.out.println("DATA: " + data);
-    }
+    MainWindow() {}
 
     void mainMethod() throws IOException {
         initFrame();
@@ -50,7 +48,7 @@ class MainWindow extends JFrame {
         setSecondaryComponents();
         System.out.println("set scndr components");
         setActions();
-        fillFilesOnStart();
+        editables();
     }
 
     void setFileName(String fileName) { this.fileName = fileName; }
@@ -206,24 +204,32 @@ class MainWindow extends JFrame {
         }
     }
 
-    private void fillFilesOnStart() throws IOException {
+    void fillFilesOnStart() throws IOException {
         File fieldsFile = new File("src/ml/javalearn/filesSaver/fields/" + fileName);
         File areasFile = new File("src/ml/javalearn/filesSaver/areas/" + fileName);
-        FileWriter fieldFileWriter = new FileWriter(fieldsFile);
+        FileWriter writer = new FileWriter(fieldsFile);
         String str = "";
-        for (int i = 0; i < rows * 14 + 1; i++) {
-            str += "/";
+        for (int i = 0; i < rows * 14; i++) {
+            if (i != rows * 14 -1) {
+                str += "/";
+            }
         }
-        fieldFileWriter.write(str);
-        fieldFileWriter.close();
+        writer.write(str);
+        writer.close();
 
-        FileWriter areasFileWriter = new FileWriter(areasFile);
+        writer = new FileWriter(areasFile);
         str = "";
-        for (int i = 0; i < rows * 7 + 1; i++) {
-            str += "/";
+        for (int i = 0; i < rows * 7; i++) {
+            if (i != rows * 7 - 1) {
+                str += "/";
+            }
         }
-        areasFileWriter.write(str);
-        areasFileWriter.close();
+        writer.write(str);
+        writer.close();
+
+        writer = new FileWriter("src/ml/javalearn/tables/" + fileName);
+        writer.write(rows + "/7/" + fileName + "/1");
+        writer.close();
     }
 
     private void setSecondaryComponents() {
@@ -231,7 +237,7 @@ class MainWindow extends JFrame {
         setEditables = new JButton("Edit");
         save = new JButton("Save");
         toolBar.add(settings);
-        toolBar1.add(setEditables);
+//        toolBar1.add(setEditables);
         toolBar1.add(save);
     }
 
@@ -244,36 +250,34 @@ class MainWindow extends JFrame {
         System.out.println("START SETTING TEXTS");
 
         for (int i = 0; i < amount * 2; i++) {
-            String fieldText = fields.get(i).toString();
-            textFields[i].setText(fieldText);
+            if (fields.size() != 0) {
+                String fieldText = fields.get(i).toString();
+                textFields[i].setText(fieldText);
+            }
         }
 
         for (int i = 0; i < amount; i++) {
-            String areaText = areas.get(i).toString();
-            this.areas[i].setText(areaText);
+            if (areas.size() != 0) {
+                String areaText = areas.get(i).toString();
+                this.areas[i].setText(areaText);
+            }
         }
 
         System.out.println("END OF SETTING TEXTS");
     }
 
     private void editables() {
-        if (checkEditable) {
-            checkEditable = false;
-            for (JTextField textField : textFields) {
-                textField.setEditable(false);
-            }
-        } else {
-            checkEditable = true;
-            for (JTextField textField : textFields) {
-                textField.setEditable(true);
+        for (int i = 0; i < textFields.length; i++) {
+            if (i % 2 != 1) {
+                textFields[i].setEditable(true);
             }
         }
     }
 
-    private void setActions() {
+    private void setActions()  {
         settings.addActionListener(e -> new SettingsWindow());
 
-        setEditables.addActionListener(e -> editables());
+//        setEditables.addActionListener(e -> editables());
 
         save.addActionListener(e -> {
             try {

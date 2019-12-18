@@ -1,6 +1,7 @@
 package ml.javalearn.front;
 
 import ml.javalearn.back.Filter;
+import ml.javalearn.test.Panel;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -192,7 +193,7 @@ class ProjectManager extends JFrame {
         System.out.println("File created");
         Scanner scanner = new Scanner(file);
         String fileFill = scanner.nextLine();
-        ArrayList<String> splitFile = new ArrayList<>(Arrays.asList(fileFill.split("/", 3)));
+        ArrayList<String> splitFile = new ArrayList<>(Arrays.asList(fileFill.split("/", 4)));
         System.out.println(splitFile);
 
         System.out.println("Start creating Project Window...");
@@ -232,6 +233,9 @@ class ProjectManager extends JFrame {
             ArrayList<String> areasList = new ArrayList<>(
                     Arrays.asList(areasFill.split("/", amount)));
             System.out.println("fl" + fieldsList + "\nal" + areasList);
+            if (Integer.parseInt(splitFile.get(3)) == 0) {
+                mainWindow.fillFilesOnStart();
+            }
             mainWindow.mainMethod();
             mainWindow.splitData(fieldsList, areasList);
         } catch (FileNotFoundException ex) {
@@ -290,7 +294,11 @@ class ProjectManager extends JFrame {
             }
         });
 
-        create.addActionListener(e -> new StartWindow());
+        create.addActionListener(e -> {
+            getContentPane().removeAll();
+            getContentPane().add(new CreateProjectPanel());
+            revalidate();
+        });
 
         accept.addActionListener(e -> {
             try {
