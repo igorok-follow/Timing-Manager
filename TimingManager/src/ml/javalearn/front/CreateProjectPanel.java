@@ -9,6 +9,9 @@ class CreateProjectPanel extends JPanel {
     private JButton acceptSettings, cancel;
     private JTextField rows, fileNameField;
     private String fileName;
+    private JButton showPopup;
+    private JTextArea info;
+    private boolean checker = false;
 
     CreateProjectPanel() {
         initPanel();
@@ -16,6 +19,38 @@ class CreateProjectPanel extends JPanel {
         setLabels();
         setTextFields();
         setActions();
+        popupArea();
+    }
+
+    private void popupArea() {
+        ImageIcon rightIterator = new ImageIcon("test0.png");
+        ImageIcon downIterator = new ImageIcon("test1.png");
+
+        showPopup = new JButton();
+        showPopup.setIcon(rightIterator);
+        showPopup.setBounds(30, 140, 20, 20);
+
+        info = new JTextArea();
+        info.setBounds(30, 170, 430, 200);
+        info.setFont(new Font("Arial", Font.PLAIN, 14));
+        info.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        info.setText("test test test test test test test test test test test test test test test test test test");
+
+        showPopup.addActionListener(e -> {
+            if (checker) {
+                remove(info);
+                showPopup.setIcon(rightIterator);
+                checker = false;
+                repaint();
+            } else {
+                add(info);
+                showPopup.setIcon(downIterator);
+                checker = true;
+                repaint();
+            }
+        });
+
+        add(showPopup);
     }
 
     private void setButtons() {
@@ -43,9 +78,14 @@ class CreateProjectPanel extends JPanel {
         fileNameLabel.setFont(font);
         fileNameLabel.setBounds(30, 80, 200, 20);
 
+        JLabel moreInfo = new JLabel("More info...");
+        moreInfo.setFont(new Font("Arial", Font.PLAIN, 14));
+        moreInfo.setBounds(60, 140, 80, 20);
+
         add(label);
         add(rowsLabel);
         add(fileNameLabel);
+        add(moreInfo);
     }
 
     private void setTextFields() {
