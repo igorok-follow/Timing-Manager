@@ -1,4 +1,4 @@
-package ml.javalearn.components;
+package ml.javalearn.main.components;
 
 import javax.swing.*;
 import java.awt.*;

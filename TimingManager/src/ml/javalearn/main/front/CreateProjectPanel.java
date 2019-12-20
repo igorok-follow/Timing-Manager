@@ -1,4 +1,4 @@
-package ml.javalearn.front;
+package ml.javalearn.main.front;
 
 import javax.swing.*;
 import java.awt.*;

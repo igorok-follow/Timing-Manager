@@ -1,4 +1,4 @@
-package ml.javalearn.test;
+package ml.javalearn.main.test;
 
 import javax.swing.*;
 import java.awt.*;

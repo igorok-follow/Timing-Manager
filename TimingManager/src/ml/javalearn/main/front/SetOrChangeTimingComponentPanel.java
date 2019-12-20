@@ -1,15 +1,15 @@
-package ml.javalearn.front;
+package ml.javalearn.main.front;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SetOrChangeTimingComponent extends JPanel {
+public class SetOrChangeTimingComponentPanel extends JPanel {
 
     private JButton hoursPlus, hoursMinus, minutesPlus, minutesMinus;
     private JTextField hours, minutes, date;
     private Font fontForButtons = new Font("Arial", Font.BOLD, 14);
 
-    SetOrChangeTimingComponent() {
+    SetOrChangeTimingComponentPanel() {
         initPanel();
         addComponents();
     }
