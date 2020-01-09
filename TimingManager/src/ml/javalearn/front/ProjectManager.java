@@ -1,6 +1,6 @@
-package ml.javalearn.main.front;
+package ml.javalearn.front;
 
-import ml.javalearn.main.back.Filter;
+import ml.javalearn.back.Filter;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;

@@ -1,15 +1,13 @@
-package ml.javalearn.main.front;
+package ml.javalearn.front;
 
-import ml.javalearn.main.components.Fields;
-import ml.javalearn.main.components.Panels;
-import ml.javalearn.main.components.TextAreas;
+import ml.javalearn.components.Fields;
+import ml.javalearn.components.Panels;
+import ml.javalearn.components.TextAreas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +19,7 @@ class MainWindow extends JFrame {
     private JPanel gridPanel, contentPanel;
     private JToolBar toolBar;
     private JToolBar toolBar1;
-    private JButton setEditables, settings, save, clear;
+    private JButton settings, save, clear;
     private String saveDataForFields = "";
     private String saveDataForAreas = "";
     private boolean checkEditable = false;
@@ -152,13 +150,9 @@ class MainWindow extends JFrame {
                 @Override
                 public void focusGained(FocusEvent e) {
                     System.out.println("focus gained\n ................");
-//                    Point point = MouseInfo.getPointerInfo().getLocation();
-//                    int mouseX = point.x;
-//                    int mouseY = point.y;
-//                    openTargetWindow(mouseX, mouseY);
-//                    setEnabled(false);
-                    getContentPane().removeAll();
-                    getContentPane().add(new SetOrChangeTimingComponentPanel());
+                    Point p = MouseInfo.getPointerInfo().getLocation();
+                    textFields[0].requestFocus();
+                    new TimingWindow(p.x, p.y);
                 }
 
                 @Override
@@ -240,7 +234,7 @@ class MainWindow extends JFrame {
 
     private void setSecondaryComponents() {
         settings     = new JButton(new ImageIcon("set.png"));
-        setEditables = new JButton("Edit");
+        JButton setEditables = new JButton("Edit");
         save = new JButton("Save");
         toolBar.add(settings);
 //        toolBar1.add(setEditables);
@@ -300,41 +294,6 @@ class MainWindow extends JFrame {
         cancelBtn.addActionListener(e -> {
 
         });
-    }
-
-    private void openTargetWindow(int x, int y) {
-        frame.setSize(300, 300);
-        frame.setResizable(true);
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                e.getWindow().dispose();
-                setEnabled(true);
-                textFields[0].requestFocus();
-            }
-        });
-        frame.setLocation(x, y);
-        frame.setVisible(true);
-        addComponentsOnTargetWindow();
-        System.out.println("frame opened\n ..............");
-    }
-
-    private void addComponentsOnTargetWindow() {
-        JPanel targetContentPanel = new JPanel();
-        targetContentPanel.setLayout(null);
-        frame.getContentPane().add(targetContentPanel);
-
-        JLabel label = new JLabel("Set timing");
-        label.setFont(new Font("Arial", Font.BOLD, 16));
-        label.setBounds(100, 0, 200, 20);
-
-        acceptBtn.setBounds(75, 230, 100, 25);
-        cancelBtn.setBounds(177, 230, 100, 25);
-        targetContentPanel.add(acceptBtn);
-        targetContentPanel.add(cancelBtn);
-        targetContentPanel.add(label);
-        targetContentPanel.add(new SetOrChangeTimingComponentPanel());
     }
 
     private void initFrame() {
