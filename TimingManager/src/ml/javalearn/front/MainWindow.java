@@ -8,10 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 class MainWindow extends JFrame {
 
@@ -22,12 +21,25 @@ class MainWindow extends JFrame {
     private JButton settings, save, clear;
     private String saveDataForFields = "";
     private String saveDataForAreas = "";
-    private boolean checkEditable = false;
+//    private boolean checkEditable = false;
     int rows, panelsSize, textFieldsSize;
     String fileName, data;
     private JTextField[] textFields;
     private JPanel[] panels;
     private TextAreas[] areas;
+    private JTextField focusableField;
+    private FocusListener focusListener = new FocusListener() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            System.out.println("focus gained\n ................");
+            getFocusableField();
+            Point p = MouseInfo.getPointerInfo().getLocation();
+            textFields[0].requestFocus();
+            new TimingWindow(p.x, p.y);
+        }
+        @Override
+        public void focusLost(FocusEvent e) {}
+    };
 
     //secondary components
     private JFrame frame = new JFrame("target window");
@@ -124,11 +136,11 @@ class MainWindow extends JFrame {
     private void spawnFields() {
         textFields = new JTextField[textFieldsSize];
         areas = new TextAreas[panelsSize];
-        int counter = 0, amount = rows * 14;
-        System.out.println("Amount of will spawned fields: " + amount);
+        int counter = 0;
+        System.out.println("Amount of will spawned fields: " +  rows * 14);
 
         System.out.println("Fill the textFields array: \n");
-        for (int i = 0; i < amount; i++) {
+        for (int i = 0; i <  rows * 14; i++) {
             Fields fields = new Fields();
             textFields[i] = fields;
         }
@@ -146,18 +158,7 @@ class MainWindow extends JFrame {
             panels[i].add(textFields[counter]);
             counter++;
 
-            textFields[counter].addFocusListener(new FocusListener() {
-                @Override
-                public void focusGained(FocusEvent e) {
-                    System.out.println("focus gained\n ................");
-                    Point p = MouseInfo.getPointerInfo().getLocation();
-                    textFields[0].requestFocus();
-                    new TimingWindow(p.x, p.y);
-                }
-
-                @Override
-                public void focusLost(FocusEvent e) {}
-            });
+            textFields[counter].addFocusListener(focusListener);
             panels[i].add(textFields[counter]);
             counter++;
 
@@ -294,6 +295,26 @@ class MainWindow extends JFrame {
         cancelBtn.addActionListener(e -> {
 
         });
+    }
+
+    void refreshTimingField() throws FileNotFoundException {
+        File file = new File("src/ml/javalearn/notifications/dates/" + fileName);
+        Scanner scanner = new Scanner(file);
+        String fileFill = "";
+        while (scanner.hasNextLine()) {
+            fileFill += scanner.nextLine() + "\n";
+        }
+        System.out.println(fileFill);
+        System.out.println(focusableField);
+        focusableField.setText(fileFill);
+    }
+
+    String getFileName() {
+        return fileName;
+    }
+
+    private void getFocusableField() {
+        focusableField = (JTextField) KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
 
     private void initFrame() {

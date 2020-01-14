@@ -120,7 +120,7 @@ class ProjectManager extends JFrame {
     }
 
     private void fillList() {
-        String way = "src/ml/javalearn/main/tables/";
+        String way = "src/ml/javalearn/tables/";
         ArrayList<File> arrayList = new ArrayList<>(Arrays.asList(filter.finderFiles(way)));
         defaultListModel = new DefaultListModel<>();
         defaultListModel.addAll(arrayList);

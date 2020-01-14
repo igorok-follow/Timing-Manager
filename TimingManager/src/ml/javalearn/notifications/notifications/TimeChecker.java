@@ -1,4 +1,4 @@
-package ml.javalearn.notifications;
+package ml.javalearn.notifications.notifications;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;

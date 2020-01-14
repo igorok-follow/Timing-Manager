@@ -4,9 +4,13 @@ import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
-public class TimingWindow extends JFrame {
+public class TimingWindow extends MainWindow {
 
     public static void main(String[] args) throws ClassNotFoundException,
             UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
@@ -18,8 +22,10 @@ public class TimingWindow extends JFrame {
     private JCalendar calendar;
     private JLabel forTest, title;
     private JPanel contentPanel;
-    private int x, y;
-    private boolean flag = true, flag2;
+    private int x, y, monthCounter;
+    private boolean flag = true, closed;
+    private String[] dateParts;
+    private JFrame frame = new JFrame("Set time of notification");
 
     private final Font FONT_FOR_BUTTONS = new Font("Arial", Font.BOLD, 14);
 
@@ -32,7 +38,7 @@ public class TimingWindow extends JFrame {
     private void setContentPanel() {
         contentPanel = new JPanel();
         contentPanel.setLayout(null);
-        getContentPane().add(contentPanel);
+        frame.getContentPane().add(contentPanel);
     }
 
     private void addComponents() {
@@ -101,26 +107,96 @@ public class TimingWindow extends JFrame {
         in.start();
     }
 
+    private void changeListenerOnAcceptButton() {
+        setTimingBtn.addActionListener(e -> {
+            System.out.println("Work second listener");
+            writeData();
+            try {
+                refreshTimingField();
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    private void writeData() {
+        try {
+            System.out.println("write started");
+            String fileName = "src/ml/javalearn/notifications/dates/" + getFileName();
+            FileWriter fileWriter = new FileWriter(fileName);
+            fileWriter.write(dateParts[2] + "." + monthCounter + "." + dateParts[5]);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void splitAndSelectCalendarData(String date) {
         System.out.println(date);
-        String[] dateParts = new String[6];
         dateParts = date.split(" ", 6);
         System.out.println(Arrays.asList(dateParts));
+        switch (dateParts[1]) {
+            case "Jan":
+                monthCounter = 1;
+                break;
+            case "Feb":
+                monthCounter = 2;
+                break;
+            case "Mar":
+                monthCounter = 3;
+                break;
+            case "Apr":
+                monthCounter = 4;
+                break;
+            case "May":
+                monthCounter = 5;
+                break;
+            case "Jun":
+                monthCounter = 6;
+                break;
+            case "Jul":
+                monthCounter = 7;
+                break;
+            case "Aug":
+                monthCounter = 8;
+                break;
+            case "Sep":
+                monthCounter = 9;
+                break;
+            case "Oct":
+                monthCounter = 10;
+                break;
+            case "Nov":
+                monthCounter = 11;
+                break;
+            case "Dec":
+                monthCounter = 12;
+                break;
+            default:
+                System.out.println("none");
+        }
     }
 
     private void setListeners() {
         setTimingBtn.addActionListener(e -> {
             replaceAnimation1();
             replaceAnimation2();
+            for (ActionListener l:setTimingBtn.getActionListeners()) {
+                setTimingBtn.removeActionListener(l);
+                System.out.println("removed");
+            }
+            changeListenerOnAcceptButton();
         });
+        cancelBtn.addActionListener(e -> frame.dispose());
     }
 
     private void createFrame() {
-        setBounds(0, 30, 269, 235);
-        setLocation(x, y);
-        setTitle("test");
-        setUndecorated(true);
-        setVisible(true);
+        frame.setBounds(0, 30, 269, 235);
+        frame.setLocation(x, y);
+        frame.setUndecorated(true);
+        frame.setVisible(true);
     }
 
     private void init() {
