@@ -105,10 +105,7 @@ class CreateProjectPanel extends JPanel {
 
             int rowsInt = Integer.parseInt(rows.getText());
 
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.rows = rowsInt;
-            System.out.println("Number of entered rows: " + mainWindow.rows);
-            System.out.println("Number of entered cols: 7");
+            MainWindow mainWindow = new MainWindow(fileName, rowsInt);
             int amount = rowsInt * 7;
             mainWindow.textFieldsSize = amount * 3;
             mainWindow.panelsSize     = amount;

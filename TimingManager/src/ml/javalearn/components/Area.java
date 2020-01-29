@@ -3,11 +3,11 @@ package ml.javalearn.components;
 import javax.swing.*;
 import java.awt.*;
 
-public class TextAreas extends JTextArea {
+public class Area extends JTextArea {
 
     JScrollPane scrollPane;
 
-    public TextAreas() {
+    public Area() {
         scrollPane = new JScrollPane(this);
         setFont(new Font("Arial", Font.PLAIN, 16));
     }

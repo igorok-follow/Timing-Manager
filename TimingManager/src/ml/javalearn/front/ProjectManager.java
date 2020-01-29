@@ -17,8 +17,8 @@ class ProjectManager extends JFrame {
     private DefaultListModel<File> defaultListModel;
     private JList<File> list;
     private JTextArea descriptionArea;
-    private Filter filter = new Filter();
     private int counter = 0;
+    private final Filter filter = new Filter();
 
     ProjectManager() {
         setPanel();
@@ -147,7 +147,7 @@ class ProjectManager extends JFrame {
         String[] files;
         files = fileName.split("/", 5);
         File file = new File(files[files.length-1]);
-        FileWriter fileWriter = new FileWriter("src/ml/javalearn/main/descriptions/" + file.getName());
+        FileWriter fileWriter = new FileWriter("src/ml/javalearn/descriptions/" + file.getName());
         fileWriter.write(descriptionArea.getText());
         fileWriter.close();
         if(file.exists() && !file.isDirectory()) {
@@ -166,7 +166,7 @@ class ProjectManager extends JFrame {
             System.out.println("Splitted");
             File file = new File(files[files.length-1]);
             System.out.println("File created");
-            File file1 = new File("src/ml/javalearn/main/descriptions/" + file.getName());
+            File file1 = new File("src/ml/javalearn/descriptions/" + file.getName());
             FileReader fileReader = new FileReader(file1);
             Scanner scanner = new Scanner(fileReader);
             String s = "";
@@ -196,19 +196,14 @@ class ProjectManager extends JFrame {
         System.out.println(splitFile);
 
         System.out.println("Start creating Project Window...");
-        MainWindow mainWindow = new MainWindow();
         int rowsInt = Integer.parseInt(splitFile.get(0));
         int amount = 7 * rowsInt;
         System.out.println("selected index " + list.getSelectedValue());
-        mainWindow.setFileName(file.getName());
-        mainWindow.setRows(rowsInt);
-        mainWindow.setTextFieldsSize(amount * 2);
-        System.out.println("TEXTFIELDSSIZE EQUALS " + amount);
-        mainWindow.setPanelsSize(amount);
+        MainWindow mainWindow = new MainWindow(file.getName(), rowsInt);
         System.out.println("data transferred: " + "\namount a panels: " + amount + "\nRows: " + rowsInt);
 
         try {
-            File file1 = new File("src/ml/javalearn/main/filesSaver/fields/" + file.getName());
+            File file1 = new File("src/ml/javalearn/filesSaver/fields/" + file.getName());
             fileReader = new FileReader(file1);
             sc = new Scanner(fileReader);
             String fieldsFill = "";
@@ -217,7 +212,7 @@ class ProjectManager extends JFrame {
             }
             System.out.println("fill of fields:" + fieldsFill);
 
-            File file2 = new File("src/ml/javalearn/main/filesSaver/areas/" + file.getName());
+            File file2 = new File("src/ml/javalearn/filesSaver/areas/" + file.getName());
             fileReader = new FileReader(file2);
             sc = new Scanner(fileReader);
             String areasFill = "";
@@ -235,11 +230,9 @@ class ProjectManager extends JFrame {
             if (Integer.parseInt(splitFile.get(3)) == 0) {
                 mainWindow.fillFilesOnStart();
             }
-            mainWindow.mainMethod();
             mainWindow.splitData(fieldsList, areasList);
         } catch (FileNotFoundException ex) {
             System.out.println("file not found");
-            mainWindow.mainMethod();
         }
 
         updateList();

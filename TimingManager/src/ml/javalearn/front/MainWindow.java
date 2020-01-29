@@ -1,8 +1,8 @@
 package ml.javalearn.front;
 
-import ml.javalearn.components.Fields;
-import ml.javalearn.components.Panels;
-import ml.javalearn.components.TextAreas;
+import ml.javalearn.components.Field;
+import ml.javalearn.components.Panel;
+import ml.javalearn.components.Area;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,20 +14,22 @@ import java.util.Scanner;
 
 class MainWindow extends JFrame {
 
-    //primary components
     private JPanel gridPanel, contentPanel;
     private JToolBar toolBar;
     private JToolBar toolBar1;
-    private JButton settings, save, clear;
+    private JButton settings, save, clearBtn;
     private String saveDataForFields = "";
     private String saveDataForAreas = "";
-//    private boolean checkEditable = false;
+
     int rows, panelsSize, textFieldsSize;
     String fileName, data;
     private JTextField[] textFields;
     private JPanel[] panels;
-    private TextAreas[] areas;
+    private Area[] areas;
     private JTextField focusableField;
+    private MainWindow mainWindow;
+    private JButton acceptBtn = new JButton("Set timing");
+    private JButton cancelBtn = new JButton("Cancel");
     private FocusListener focusListener = new FocusListener() {
         @Override
         public void focusGained(FocusEvent e) {
@@ -35,18 +37,21 @@ class MainWindow extends JFrame {
             getFocusableField();
             Point p = MouseInfo.getPointerInfo().getLocation();
             textFields[0].requestFocus();
-            new TimingWindow(p.x, p.y);
+            new TimingWindow(p.x, p.y, fileName, mainWindow);
         }
         @Override
         public void focusLost(FocusEvent e) {}
     };
 
-    //secondary components
-    private JFrame frame = new JFrame("target window");
-    private JButton acceptBtn = new JButton("Set timing");
-    private JButton cancelBtn = new JButton("Cancel");
 
-    MainWindow() {}
+    MainWindow(String fileName, int rows) {
+        this.fileName = fileName;
+        this.rows = rows;
+        textFieldsSize = rows * 14;
+        panelsSize = rows * 7;
+
+        mainMethod();
+    }
 
     void mainMethod() {
         initFrame();
@@ -61,16 +66,8 @@ class MainWindow extends JFrame {
         System.out.println("set scndr components");
         setActions();
         System.out.println("set editables");
-        editables();
+        mainWindow = this;
     }
-
-    void setFileName(String fileName) { this.fileName = fileName; }
-
-    void setRows(int rows) { this.rows = rows; }
-
-    void setTextFieldsSize(int textFieldsSize) { this.textFieldsSize = textFieldsSize; }
-
-    void setPanelsSize(int panelsSize) { this.panelsSize = panelsSize; }
 
     void createProject() throws IOException {
         FileWriter writer = new FileWriter("src/ml/javalearn/tables/" + fileName);
@@ -122,7 +119,7 @@ class MainWindow extends JFrame {
         System.out.println("Number of will spawned cells: " + panels.length);
 
         for (int i = 0; i < panels.length; i++) {
-            Panels panelss = new Panels();
+            Panel panelss = new Panel();
             panels[i] = panelss;
             gridPanel.add(panelss);
             counter++;
@@ -135,21 +132,21 @@ class MainWindow extends JFrame {
 
     private void spawnFields() {
         textFields = new JTextField[textFieldsSize];
-        areas = new TextAreas[panelsSize];
+        areas = new Area[panelsSize];
         int counter = 0;
         System.out.println("Amount of will spawned fields: " +  rows * 14);
 
         System.out.println("Fill the textFields array: \n");
         for (int i = 0; i <  rows * 14; i++) {
-            Fields fields = new Fields();
-            textFields[i] = fields;
+            Field field = new Field();
+            textFields[i] = field;
         }
 
         System.out.println("Fields was loaded");
 
         for (int i = 0; i < rows * 7; i++) {
-            TextAreas textAreas = new TextAreas();
-            areas[i] = textAreas;
+            Area area = new Area();
+            areas[i] = area;
         }
 
         System.out.println("Areas was loaded");
@@ -209,23 +206,23 @@ class MainWindow extends JFrame {
         File fieldsFile = new File("src/ml/javalearn/filesSaver/fields/" + fileName);
         File areasFile = new File("src/ml/javalearn/filesSaver/areas/" + fileName);
         FileWriter writer = new FileWriter(fieldsFile);
-        String str = "";
+        StringBuilder str = new StringBuilder();
         for (int i = 0; i < rows * 14; i++) {
             if (i != rows * 14 -1) {
-                str += "/";
+                str.append("/");
             }
         }
-        writer.write(str);
+        writer.write(str.toString());
         writer.close();
 
         writer = new FileWriter(areasFile);
-        str = "";
+        str = new StringBuilder();
         for (int i = 0; i < rows * 7; i++) {
             if (i != rows * 7 - 1) {
-                str += "/";
+                str.append("/");
             }
         }
-        writer.write(str);
+        writer.write(str.toString());
         writer.close();
 
         writer = new FileWriter("src/ml/javalearn/tables/" + fileName);
@@ -235,11 +232,11 @@ class MainWindow extends JFrame {
 
     private void setSecondaryComponents() {
         settings     = new JButton(new ImageIcon("set.png"));
-        JButton setEditables = new JButton("Edit");
         save = new JButton("Save");
         toolBar.add(settings);
-//        toolBar1.add(setEditables);
         toolBar1.add(save);
+
+        toolBar1.add(clearBtn);
     }
 
     void splitData(ArrayList fields, ArrayList areas) {
@@ -267,18 +264,8 @@ class MainWindow extends JFrame {
         System.out.println("END OF SETTING TEXTS");
     }
 
-    private void editables() {
-        for (int i = 0; i < textFields.length; i++) {
-            if (i % 2 != 1) {
-                textFields[i].setEditable(true);
-            }
-        }
-    }
-
     private void setActions()  {
         settings.addActionListener(e -> new SettingsWindow());
-
-//        setEditables.addActionListener(e -> editables());
 
         save.addActionListener(e -> {
             try {
@@ -295,9 +282,19 @@ class MainWindow extends JFrame {
         cancelBtn.addActionListener(e -> {
 
         });
+
+        clearBtn.addActionListener(e -> {
+            for (JTextField field : textFields) {
+                field.setText(null);
+            }
+            for (JTextArea area : areas) {
+                area.setText(null);
+            }
+        });
     }
 
     void refreshTimingField() throws FileNotFoundException {
+        System.out.println("Start refresh timing field");
         File file = new File("src/ml/javalearn/notifications/dates/" + fileName);
         Scanner scanner = new Scanner(file);
         String fileFill = "";
@@ -305,12 +302,7 @@ class MainWindow extends JFrame {
             fileFill += scanner.nextLine() + "\n";
         }
         System.out.println(fileFill);
-        System.out.println(focusableField);
         focusableField.setText(fileFill);
-    }
-
-    String getFileName() {
-        return fileName;
     }
 
     private void getFocusableField() {
@@ -325,8 +317,4 @@ class MainWindow extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        SwingUtilities.invokeLater(MainWindow::new);
-    }
 }

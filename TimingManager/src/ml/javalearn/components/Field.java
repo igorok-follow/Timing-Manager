@@ -3,9 +3,9 @@ package ml.javalearn.components;
 import javax.swing.*;
 import java.awt.*;
 
-public class Fields extends JTextField {
+public class Field extends JTextField {
 
-    public Fields() {
+    public Field() {
         setFont(new Font("Arial", Font.PLAIN, 16));
         setHorizontalAlignment(SwingConstants.CENTER);
         setEditable(false);

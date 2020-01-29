@@ -10,28 +10,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class TimingWindow extends MainWindow {
-
-    public static void main(String[] args) throws ClassNotFoundException,
-            UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        SwingUtilities.invokeLater(() -> new TimingWindow(100, 100));
-    }
+class TimingWindow {
 
     private JButton setTimingBtn, cancelBtn;
     private JCalendar calendar;
     private JLabel forTest, title;
     private JPanel contentPanel;
     private int x, y, monthCounter;
-    private boolean flag = true, closed;
+    private boolean flag = true;
     private String[] dateParts;
     private JFrame frame = new JFrame("Set time of notification");
+    private String fileName, fileWay;
+    private MainWindow mainWindow;
 
     private final Font FONT_FOR_BUTTONS = new Font("Arial", Font.BOLD, 14);
 
-    TimingWindow(int x, int y) {
+    boolean closed;
+
+    TimingWindow(int x, int y, String fileName, MainWindow mainWindow) {
         this.x = x;
         this.y = y;
+        this.fileName = fileName;
+        this.mainWindow = mainWindow;
         init();
     }
 
@@ -111,8 +111,10 @@ public class TimingWindow extends MainWindow {
         setTimingBtn.addActionListener(e -> {
             System.out.println("Work second listener");
             writeData();
+            frame.dispose();
+            System.out.println("closed");
             try {
-                refreshTimingField();
+                mainWindow.refreshTimingField();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -122,8 +124,8 @@ public class TimingWindow extends MainWindow {
     private void writeData() {
         try {
             System.out.println("write started");
-            String fileName = "src/ml/javalearn/notifications/dates/" + getFileName();
-            FileWriter fileWriter = new FileWriter(fileName);
+            fileWay = "src/ml/javalearn/notifications/dates/" + fileName;
+            FileWriter fileWriter = new FileWriter(fileWay);
             fileWriter.write(dateParts[2] + "." + monthCounter + "." + dateParts[5]);
             fileWriter.flush();
             fileWriter.close();
