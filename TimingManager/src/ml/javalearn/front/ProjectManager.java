@@ -199,7 +199,7 @@ class ProjectManager extends JFrame {
         int rowsInt = Integer.parseInt(splitFile.get(0));
         int amount = 7 * rowsInt;
         System.out.println("selected index " + list.getSelectedValue());
-        MainWindow mainWindow = new MainWindow(file.getName(), rowsInt);
+        MainWindow mainWindow = new MainWindow(file.getName(), null, rowsInt);
         System.out.println("data transferred: " + "\namount a panels: " + amount + "\nRows: " + rowsInt);
 
         try {

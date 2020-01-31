@@ -12,26 +12,32 @@ import java.util.Arrays;
 
 class TimingWindow {
 
+    public static void main(String[] args) throws ClassNotFoundException,
+            UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        SwingUtilities.invokeLater(() -> {
+            new TimingWindow(100, 100, "testName");
+        });
+    }
+
     private JButton setTimingBtn, cancelBtn;
-    private JCalendar calendar;
-    private JLabel forTest, title;
     private JPanel contentPanel;
     private int x, y, monthCounter;
-    private boolean flag = true;
     private String[] dateParts;
     private JFrame frame = new JFrame("Set time of notification");
-    private String fileName, fileWay;
+    private String fileName;
     private MainWindow mainWindow;
+    private SetNotificationTimePanel setNotificationTimePanel;
+    private SetNotificationDatePanel setNotificationDatePanel;
 
     private final Font FONT_FOR_BUTTONS = new Font("Arial", Font.BOLD, 14);
 
-    boolean closed;
 
-    TimingWindow(int x, int y, String fileName, MainWindow mainWindow) {
+    TimingWindow(int x, int y, String fileName) {
         this.x = x;
         this.y = y;
         this.fileName = fileName;
-        this.mainWindow = mainWindow;
+//        this.mainWindow = mainWindow;
         init();
     }
 
@@ -42,13 +48,6 @@ class TimingWindow {
     }
 
     private void addComponents() {
-        calendar = new JCalendar();
-        calendar.setBounds(10, 50, 250, 150);
-
-        title = new JLabel("Set time of notification");
-        title.setBounds(50, 10, 250, 40);
-        title.setFont(FONT_FOR_BUTTONS);
-
         setTimingBtn = new JButton("Next");
         setTimingBtn.setBounds(13, 202, 122, 20);
         setTimingBtn.setFont(FONT_FOR_BUTTONS);
@@ -57,51 +56,38 @@ class TimingWindow {
         cancelBtn.setBounds(135, 202, 122, 20);
         cancelBtn.setFont(FONT_FOR_BUTTONS);
 
-        forTest = new JLabel("test test test");
-        forTest.setBounds(300, 150, 150, 50);
-        forTest.setFont(FONT_FOR_BUTTONS);
+        setNotificationTimePanel = new SetNotificationTimePanel(278, 0, 241, 170);
+        setNotificationDatePanel = new SetNotificationDatePanel(0, 0, 241, 200);
 
-        contentPanel.add(title);
-        contentPanel.add(calendar);
         contentPanel.add(setTimingBtn);
-        contentPanel.add(forTest);
         contentPanel.add(cancelBtn);
+        contentPanel.add(setNotificationTimePanel);
+        contentPanel.add(setNotificationDatePanel);
     }
 
     private void replaceAnimation1() {
-        flag = true;
         Thread out = new Thread(() -> {
-            while (flag) {
-                for (int i = -10; i < 252; i+=2 ) {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    calendar.setBounds(-i, 50, 250, 150);
-                    title.setBounds(-i, 10, 250, 40);
-                    setTimingBtn.setText("Set timing");
-                    if (calendar.getBounds().x == -250) flag = false;
+            for (int i = -10; i < 252; i+=2 ) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                setNotificationDatePanel.setBounds(-i, 0, 241, 200);
             }
-            splitAndSelectCalendarData(calendar.getCalendar().getTime().toString());
         });
         out.start();
     }
 
     private void replaceAnimation2() {
-        flag = true;
         Thread in = new Thread(() -> {
-            while (flag) {
-                for (int i = 300; i > 50; i-=2) {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    forTest.setBounds(i, 150, 150, 50);
-                    if (forTest.getBounds().x == 52) flag = false;
+            for (int i = 300; i > 12; i-=2) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                setNotificationTimePanel.setBounds(i, 1, 241, 200);
             }
         });
         in.start();
@@ -109,10 +95,8 @@ class TimingWindow {
 
     private void changeListenerOnAcceptButton() {
         setTimingBtn.addActionListener(e -> {
-            System.out.println("Work second listener");
             writeData();
             frame.dispose();
-            System.out.println("closed");
             try {
                 mainWindow.refreshTimingField();
             } catch (FileNotFoundException ex) {
@@ -124,7 +108,7 @@ class TimingWindow {
     private void writeData() {
         try {
             System.out.println("write started");
-            fileWay = "src/ml/javalearn/notifications/dates/" + fileName;
+            String fileWay = "src/ml/javalearn/notifications/dates/" + fileName;
             FileWriter fileWriter = new FileWriter(fileWay);
             fileWriter.write(dateParts[2] + "." + monthCounter + "." + dateParts[5]);
             fileWriter.flush();
@@ -179,15 +163,17 @@ class TimingWindow {
             default:
                 System.out.println("none");
         }
+        System.out.println(monthCounter);
     }
 
     private void setListeners() {
         setTimingBtn.addActionListener(e -> {
             replaceAnimation1();
+            splitAndSelectCalendarData(setNotificationDatePanel.getCalendar());
             replaceAnimation2();
-            for (ActionListener l:setTimingBtn.getActionListeners()) {
+            setTimingBtn.setText("Set time");
+            for (ActionListener l : setTimingBtn.getActionListeners()) {
                 setTimingBtn.removeActionListener(l);
-                System.out.println("removed");
             }
             changeListenerOnAcceptButton();
         });
@@ -195,8 +181,7 @@ class TimingWindow {
     }
 
     private void createFrame() {
-        frame.setBounds(0, 30, 269, 235);
-        frame.setLocation(x, y);
+        frame.setBounds(x, y, 269, 235);
         frame.setUndecorated(true);
         frame.setVisible(true);
     }

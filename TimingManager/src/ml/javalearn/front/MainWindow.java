@@ -37,16 +37,17 @@ class MainWindow extends JFrame {
             getFocusableField();
             Point p = MouseInfo.getPointerInfo().getLocation();
             textFields[0].requestFocus();
-            new TimingWindow(p.x, p.y, fileName, mainWindow);
+//            new TimingWindow(p.x, p.y, fileName, mainWindow);
         }
         @Override
         public void focusLost(FocusEvent e) {}
     };
 
 
-    MainWindow(String fileName, int rows) {
+    MainWindow(String fileName, String data, int rows) {
         this.fileName = fileName;
         this.rows = rows;
+        this.data = data;
         textFieldsSize = rows * 14;
         panelsSize = rows * 7;
 

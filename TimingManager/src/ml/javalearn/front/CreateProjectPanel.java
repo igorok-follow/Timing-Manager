@@ -105,27 +105,18 @@ class CreateProjectPanel extends JPanel {
 
             int rowsInt = Integer.parseInt(rows.getText());
 
-            MainWindow mainWindow = new MainWindow(fileName, rowsInt);
-            int amount = rowsInt * 7;
-            mainWindow.textFieldsSize = amount * 3;
-            mainWindow.panelsSize     = amount;
+            MainWindow mainWindow = new MainWindow(
+                    fileName = fileNameField.getText(), rows.getText() + "/7/" + fileName + "/0", rowsInt);
             setVisible(false);
             System.out.println("Start window was closed");
 
-            fileName = fileNameField.getText();
-
-            mainWindow.data = rows.getText() + "/7/" + fileName + "/0";
-            mainWindow.fileName = fileName;
-
             try {
                 mainWindow.createProject();
-                mainWindow.mainMethod();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
             System.out.println("Main method was completed");
             mainWindow.setVisible(true);
-
         });
 
         cancel.addActionListener(e -> System.exit(0));
