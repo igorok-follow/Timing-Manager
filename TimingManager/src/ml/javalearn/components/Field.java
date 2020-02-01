@@ -8,7 +8,6 @@ public class Field extends JTextField {
     public Field() {
         setFont(new Font("Arial", Font.PLAIN, 16));
         setHorizontalAlignment(SwingConstants.CENTER);
-        setEditable(false);
     }
 
 }

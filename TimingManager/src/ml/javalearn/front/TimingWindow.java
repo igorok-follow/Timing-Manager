@@ -1,9 +1,12 @@
 package ml.javalearn.front;
 
-import com.toedter.calendar.JCalendar;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,7 +19,7 @@ class TimingWindow {
             UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.invokeLater(() -> {
-            new TimingWindow(100, 100, "testName");
+            new TimingWindow(100, 100, "testName", null);
         });
     }
 
@@ -33,11 +36,11 @@ class TimingWindow {
     private final Font FONT_FOR_BUTTONS = new Font("Arial", Font.BOLD, 14);
 
 
-    TimingWindow(int x, int y, String fileName) {
+    TimingWindow(int x, int y, String fileName, MainWindow mainWindow) {
         this.x = x;
         this.y = y;
         this.fileName = fileName;
-//        this.mainWindow = mainWindow;
+        this.mainWindow = mainWindow;
         init();
     }
 
@@ -57,7 +60,7 @@ class TimingWindow {
         cancelBtn.setFont(FONT_FOR_BUTTONS);
 
         setNotificationTimePanel = new SetNotificationTimePanel(278, 0, 241, 170);
-        setNotificationDatePanel = new SetNotificationDatePanel(0, 0, 241, 200);
+        setNotificationDatePanel = new SetNotificationDatePanel(0, 0, 271, 200);
 
         contentPanel.add(setTimingBtn);
         contentPanel.add(cancelBtn);

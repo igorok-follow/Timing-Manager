@@ -20,14 +20,15 @@ class MainWindow extends JFrame {
     private JButton settings, save, clearBtn;
     private String saveDataForFields = "";
     private String saveDataForAreas = "";
+    private String wayToFieldsFile = "src/ml/javalearn/filesSaver/fields/";
+    private String wayToAreasFile  = "src/ml/javalearn/filesSaver/areas/";
 
-    int rows, panelsSize, textFieldsSize;
-    String fileName, data;
+    private int rows, panelsSize, textFieldsSize;
+    private String fileName, data;
     private JTextField[] textFields;
     private JPanel[] panels;
     private Area[] areas;
     private JTextField focusableField;
-    private MainWindow mainWindow;
     private JButton acceptBtn = new JButton("Set timing");
     private JButton cancelBtn = new JButton("Cancel");
     private FocusListener focusListener = new FocusListener() {
@@ -37,7 +38,7 @@ class MainWindow extends JFrame {
             getFocusableField();
             Point p = MouseInfo.getPointerInfo().getLocation();
             textFields[0].requestFocus();
-//            new TimingWindow(p.x, p.y, fileName, mainWindow);
+            new TimingWindow(p.x, p.y, fileName, getThisClass());
         }
         @Override
         public void focusLost(FocusEvent e) {}
@@ -54,7 +55,7 @@ class MainWindow extends JFrame {
         mainMethod();
     }
 
-    void mainMethod() {
+    private void mainMethod() {
         initFrame();
         System.out.println("init frame");
         setToolBar();
@@ -67,7 +68,10 @@ class MainWindow extends JFrame {
         System.out.println("set scndr components");
         setActions();
         System.out.println("set editables");
-        mainWindow = this;
+    }
+
+    private MainWindow getThisClass() {
+        return this;
     }
 
     void createProject() throws IOException {
@@ -186,8 +190,8 @@ class MainWindow extends JFrame {
             }
         }
 
-        File fieldsFile = new File("src/ml/javalearn/filesSaver/fields/" + fileName);
-        File areasFile = new File("src/ml/javalearn/filesSaver/areas/" + fileName);
+        File fieldsFile = new File(wayToFieldsFile + fileName);
+        File areasFile = new File(wayToAreasFile + fileName);
         FileWriter fieldFileWriter = new FileWriter(fieldsFile);
         fieldFileWriter.write(saveDataForFields);
         fieldFileWriter.close();
@@ -232,8 +236,10 @@ class MainWindow extends JFrame {
     }
 
     private void setSecondaryComponents() {
-        settings     = new JButton(new ImageIcon("set.png"));
+        settings = new JButton(new ImageIcon("set.png"));
         save = new JButton("Save");
+        clearBtn = new JButton("Clear");
+
         toolBar.add(settings);
         toolBar1.add(save);
 
@@ -285,11 +291,28 @@ class MainWindow extends JFrame {
         });
 
         clearBtn.addActionListener(e -> {
-            for (JTextField field : textFields) {
-                field.setText(null);
-            }
-            for (JTextArea area : areas) {
-                area.setText(null);
+            int change = JOptionPane.showConfirmDialog(
+                this, "You are sure? This option will completely clear your timing list.\n",
+                "Select an option", JOptionPane.YES_NO_OPTION);
+            if (change == 0) {
+                for (JTextField field : textFields) {
+                    field.setText(null);
+                }
+                for (JTextArea area : areas) {
+                    area.setText(null);
+                }
+
+                try {
+                    FileWriter fieldsWriter = new FileWriter(wayToFieldsFile + fileName);
+                    fieldsWriter.write("");
+                    fieldsWriter.flush();
+                    FileWriter areasWriter = new FileWriter(wayToAreasFile + fileName);
+                    areasWriter.write("");
+                    areasWriter.flush();
+                    areasWriter.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
