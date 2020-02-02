@@ -102,6 +102,7 @@ class TimingWindow {
             frame.dispose();
             try {
                 mainWindow.refreshTimingField();
+                mainWindow.startWaitNotificationTime();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -113,7 +114,8 @@ class TimingWindow {
             System.out.println("write started");
             String fileWay = "src/ml/javalearn/notifications/dates/" + fileName;
             FileWriter fileWriter = new FileWriter(fileWay);
-            fileWriter.write(dateParts[2] + "." + monthCounter + "." + dateParts[5]);
+            fileWriter.write(dateParts[2] + "." + monthCounter + "." + dateParts[5] + "_" +
+                    setNotificationTimePanel.getHours() + ":" + setNotificationTimePanel.getMinutes());
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {

@@ -3,13 +3,17 @@ package ml.javalearn.front;
 import ml.javalearn.components.Field;
 import ml.javalearn.components.Panel;
 import ml.javalearn.components.Area;
+import ml.javalearn.notifications.notifications.ShowNotification;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 class MainWindow extends JFrame {
@@ -18,10 +22,14 @@ class MainWindow extends JFrame {
     private JToolBar toolBar;
     private JToolBar toolBar1;
     private JButton settings, save, clearBtn;
+    private String[] time;
     private String saveDataForFields = "";
     private String saveDataForAreas = "";
     private String wayToFieldsFile = "src/ml/javalearn/filesSaver/fields/";
     private String wayToAreasFile  = "src/ml/javalearn/filesSaver/areas/";
+    private String timingTime;
+    private String timingDate;
+    private String timing;
 
     private int rows, panelsSize, textFieldsSize;
     private String fileName, data;
@@ -303,13 +311,7 @@ class MainWindow extends JFrame {
                 }
 
                 try {
-                    FileWriter fieldsWriter = new FileWriter(wayToFieldsFile + fileName);
-                    fieldsWriter.write("");
-                    fieldsWriter.flush();
-                    FileWriter areasWriter = new FileWriter(wayToAreasFile + fileName);
-                    areasWriter.write("");
-                    areasWriter.flush();
-                    areasWriter.close();
+                    saveProject();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -317,16 +319,67 @@ class MainWindow extends JFrame {
         });
     }
 
+    private void castTiming() {
+        ArrayList<String> date = new ArrayList<>(Arrays.asList(timing.split("_", 2)));
+        timingTime = date.get(1);
+        timingDate = date.get(0);
+    }
+
+    private String getTime() {
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HH:mm");
+
+        return myDateObj.format(myFormatObj);
+    }
+
+    private String getDate() {
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        return myDateObj.format(myFormatObj);
+    }
+
+    //stupid not working code
+    void startWaitNotificationTime() {
+//        Thread thread = new Thread(() -> {
+//            while (true) {
+//                if (getDate().equals(timingDate)) {
+//                    break;
+//                } else {
+//                    try {
+//                        Thread.sleep(36_000_000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            while (true) {
+//                if (getTime().equals(timingTime)) {
+//                    ShowNotification.showInfoNotification(
+//                            "Notification of " + fileName, "You requested me to notify you in this moment.");
+//                    break;
+//                } else {
+//                    try {
+//                        Thread.sleep(60_000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//        thread.start();
+    }
+
     void refreshTimingField() throws FileNotFoundException {
         System.out.println("Start refresh timing field");
         File file = new File("src/ml/javalearn/notifications/dates/" + fileName);
         Scanner scanner = new Scanner(file);
-        String fileFill = "";
+        timing = "";
         while (scanner.hasNextLine()) {
-            fileFill += scanner.nextLine() + "\n";
+            timing += scanner.nextLine() + "\n";
         }
-        System.out.println(fileFill);
-        focusableField.setText(fileFill);
+        System.out.println(timing);
+        focusableField.setText(timing);
     }
 
     private void getFocusableField() {
@@ -335,7 +388,8 @@ class MainWindow extends JFrame {
 
     private void initFrame() {
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1000, 600);
+        setMinimumSize(new Dimension(800, 600));
         setTitle("Timing Manager [" + fileName + "]");
         setLocation(100, 100);
         setVisible(true);

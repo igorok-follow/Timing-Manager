@@ -1,24 +1,40 @@
 package ml.javalearn.front;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class SetNotificationTimePanel extends JPanel {
+class SetNotificationTimePanel extends JPanel {
 
-    private JFormattedTextField formattedHours;
-    private JFormattedTextField formattedMinutes;
-    private Font font = new Font("Arial", Font.PLAIN, 16);
+    private JTextField hoursField;
+    private JTextField minutesField;
+    private Font btnFont = new Font("Arial", Font.PLAIN, 16);
+    private Font lblFont = new Font("Arial", Font.PLAIN, 12);
     private JLabel invalidNumber = new JLabel("");
+    private JLabel invalidNumber1 = new JLabel("");
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
-        public void keyPressed(KeyEvent e) {
+        public void keyReleased(KeyEvent e) {
             try {
-                int numbers = Integer.parseInt(formattedHours.getText());
+                int num  = Integer.parseInt(hoursField.getText());
                 invalidNumber.setText("");
             } catch (Exception ex) {
                 invalidNumber.setText("Invalid number");
+            }
+        }
+    };
+    private KeyAdapter keyAdapter1 = new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            try {
+                int num = Integer.parseInt(minutesField.getText());
+                invalidNumber1.setText("");
+            } catch (Exception ex) {
+                invalidNumber1.setText("Invalid number");
             }
         }
     };
@@ -30,38 +46,52 @@ public class SetNotificationTimePanel extends JPanel {
     }
 
     private void addFormattedTextFields() {
-        formattedHours   = new JFormattedTextField();
-        formattedHours.setBounds(70, 30, 160, 30);
-        formattedHours.addKeyListener(keyAdapter);
-        formattedMinutes = new JFormattedTextField();
-        formattedMinutes.setBounds(70, 90, 160, 30);
+        hoursField = new JTextField();
+        hoursField.setBounds(70, 30, 160, 30);
+        hoursField.addKeyListener(keyAdapter);
+        minutesField = new JTextField();
+        minutesField.setBounds(70, 90, 160, 30);
+        minutesField.addKeyListener(keyAdapter1);
 
-        add(formattedHours);
-        add(formattedMinutes);
+        add(hoursField);
+        add(minutesField);
     }
 
     private void addLabels() {
         JLabel hours = new JLabel("Hours:");
         hours.setBounds(5, 30, 100, 30);
-        hours.setFont(font);
+        hours.setFont(btnFont);
 
         JLabel minutes = new JLabel("Minutes:");
         minutes.setBounds(5, 90, 100, 30);
-        minutes.setFont(font);
+        minutes.setFont(btnFont);
 
-        invalidNumber.setFont(font);
+        invalidNumber.setFont(lblFont);
         invalidNumber.setForeground(Color.RED);
-        invalidNumber.setBounds(10, 10, 100, 30);
+        invalidNumber.setBounds(70, 60, 100, 30);
+
+        invalidNumber1.setFont(lblFont);
+        invalidNumber1.setForeground(Color.RED);
+        invalidNumber1.setBounds(70, 120, 100, 30);
 
         add(hours);
         add(minutes);
         add(invalidNumber);
+        add(invalidNumber1);
     }
 
     private void initPanel(int x, int y, int width, int height) {
         setLayout(null);
         setBackground(Color.gray);
         setBounds(x, y, width, height);
+    }
+
+    String getHours() {
+        return hoursField.getText();
+    }
+
+    String getMinutes() {
+        return minutesField.getText();
     }
 
 }
