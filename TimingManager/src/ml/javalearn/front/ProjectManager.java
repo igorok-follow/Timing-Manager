@@ -274,14 +274,19 @@ class ProjectManager extends JFrame {
 
         cancel.addActionListener(e -> System.exit(0));
 
+        String way = "src\\ml\\javalearn\\filesSaver\\";
         delete.addActionListener(e -> {
+            System.gc();
             File file = new File(String.valueOf(list.getSelectedValue()));
-            if (file.delete()) {
+            System.out.println(list.getSelectedValue());
+            File areas = new File(way + "areas\\" + file.getName());
+            File fields = new File(way + "fields\\" + file.getName());
+            if (file.delete() && areas.delete() && fields.delete()) {
                 updateList();
                 descriptionArea.setText("");
                 JOptionPane.showMessageDialog(null, "Timing was deleted");
             } else {
-                JOptionPane.showMessageDialog(null, "Error! Timing not saved",
+                JOptionPane.showMessageDialog(null, "Error! Timing not deleted",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         });

@@ -27,9 +27,6 @@ class MainWindow extends JFrame {
     private String saveDataForAreas = "";
     private String wayToFieldsFile = "src/ml/javalearn/filesSaver/fields/";
     private String wayToAreasFile  = "src/ml/javalearn/filesSaver/areas/";
-    private String timingTime;
-    private String timingDate;
-    private String timing;
 
     private int rows, panelsSize, textFieldsSize;
     private String fileName, data;
@@ -319,12 +316,6 @@ class MainWindow extends JFrame {
         });
     }
 
-    private void castTiming() {
-        ArrayList<String> date = new ArrayList<>(Arrays.asList(timing.split("_", 2)));
-        timingTime = date.get(1);
-        timingDate = date.get(0);
-    }
-
     private String getTime() {
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HH:mm");
@@ -339,47 +330,42 @@ class MainWindow extends JFrame {
         return myDateObj.format(myFormatObj);
     }
 
-    //stupid not working code
-    void startWaitNotificationTime() {
-//        Thread thread = new Thread(() -> {
-//            while (true) {
-//                if (getDate().equals(timingDate)) {
-//                    break;
-//                } else {
-//                    try {
-//                        Thread.sleep(36_000_000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//            while (true) {
-//                if (getTime().equals(timingTime)) {
-//                    ShowNotification.showInfoNotification(
-//                            "Notification of " + fileName, "You requested me to notify you in this moment.");
-//                    break;
-//                } else {
-//                    try {
-//                        Thread.sleep(60_000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
-//        thread.start();
+    void startWaitNotificationTime(String timing) {
+        String[] notificationTime = timing.split("_", 2);
+        String date = notificationTime[0];
+        String time = notificationTime[1];
+        Thread thread = new Thread(() -> {
+            while (true) {
+                if (date.equals(getDate())) {
+                    break;
+                } else {
+                    try {
+                        Thread.sleep(35_000_000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            while (true) {
+                if (time.equals(getTime())) {
+                    ShowNotification.showInfoNotification("Notifications", "You asked me to notify you.");
+                    break;
+                } else {
+                    try {
+                        Thread.sleep(59000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            System.out.println("OUT OF WHILES");
+        });
+        thread.start();
     }
 
-    void refreshTimingField() throws FileNotFoundException {
-        System.out.println("Start refresh timing field");
-        File file = new File("src/ml/javalearn/notifications/dates/" + fileName);
-        Scanner scanner = new Scanner(file);
-        timing = "";
-        while (scanner.hasNextLine()) {
-            timing += scanner.nextLine() + "\n";
-        }
-        System.out.println(timing);
-        focusableField.setText(timing);
+    void refreshTimingField(String date) {
+        System.out.println("REFRESHED DATE: " + date);
+        focusableField.setText(date);
     }
 
     private void getFocusableField() {
@@ -388,7 +374,7 @@ class MainWindow extends JFrame {
 
     private void initFrame() {
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        setSize(1000, 600);
+        setSize(1150, 600);
         setMinimumSize(new Dimension(800, 600));
         setTitle("Timing Manager [" + fileName + "]");
         setLocation(100, 100);

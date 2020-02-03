@@ -32,6 +32,7 @@ class TimingWindow {
     private MainWindow mainWindow;
     private SetNotificationTimePanel setNotificationTimePanel;
     private SetNotificationDatePanel setNotificationDatePanel;
+    private String savedData;
 
     private final Font FONT_FOR_BUTTONS = new Font("Arial", Font.BOLD, 14);
 
@@ -100,28 +101,34 @@ class TimingWindow {
         setTimingBtn.addActionListener(e -> {
             writeData();
             frame.dispose();
-            try {
-                mainWindow.refreshTimingField();
-                mainWindow.startWaitNotificationTime();
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            }
+            mainWindow.refreshTimingField(writeData());
+            mainWindow.startWaitNotificationTime(savedData);
         });
     }
 
-    private void writeData() {
-        try {
-            System.out.println("write started");
-            String fileWay = "src/ml/javalearn/notifications/dates/" + fileName;
-            FileWriter fileWriter = new FileWriter(fileWay);
-            fileWriter.write(dateParts[2] + "." + monthCounter + "." + dateParts[5] + "_" +
-                    setNotificationTimePanel.getHours() + ":" + setNotificationTimePanel.getMinutes());
-            fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private String writeData() {
+        String mc;
+        if (String.valueOf(monthCounter).length() < 2) {
+            mc = "0" + monthCounter;
+        } else {
+            mc = String.valueOf(monthCounter);
         }
 
+        String minutes;
+        if (setNotificationTimePanel.getMinutes().length() < 2) {
+            minutes = "0" + setNotificationTimePanel.getMinutes();
+        } else {
+            minutes = setNotificationTimePanel.getMinutes();
+        }
+
+        String hours;
+        if (setNotificationTimePanel.getHours().length() < 2) {
+            hours = "0" + setNotificationTimePanel.getHours();
+        } else {
+            hours = setNotificationTimePanel.getHours();
+        }
+
+        return savedData = dateParts[2] + "." + mc + "." + dateParts[5] + "_" + hours + ":" + minutes;
     }
 
     private void splitAndSelectCalendarData(String date) {
