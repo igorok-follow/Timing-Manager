@@ -8,10 +8,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
+import java.util.Properties;
 
 class TimingWindow {
 
@@ -34,9 +33,8 @@ class TimingWindow {
     private SetNotificationDatePanel setNotificationDatePanel;
     private String savedData;
 
-    private final Font FONT_FOR_BUTTONS = new Font("Arial", Font.BOLD, 14);
-
-
+    private Font FONT_FOR_BUTTONS;
+    
     TimingWindow(int x, int y, String fileName, MainWindow mainWindow) {
         this.x = x;
         this.y = y;

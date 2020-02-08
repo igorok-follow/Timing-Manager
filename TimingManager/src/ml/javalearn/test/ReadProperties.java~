@@ -1,0 +1,28 @@
+package ml.javalearn.test;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
+public class ReadProperties {
+
+    public static void main(String[] args) {
+        FileInputStream fileInputStream;
+        Properties properties = new Properties();
+
+        try {
+            fileInputStream = new FileInputStream("test.cfg");
+            properties.load(fileInputStream);
+            String name = properties.getProperty("projectName");
+            String theme = properties.getProperty("theme");
+            System.out.println("Project name: " + name + "Theme: " + theme);
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}

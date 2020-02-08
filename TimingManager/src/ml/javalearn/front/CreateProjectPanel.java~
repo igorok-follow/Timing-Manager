@@ -12,11 +12,8 @@ class CreateProjectPanel extends JPanel {
     private JButton showPopup;
     private JTextArea info;
     private boolean checker = false;
-    private ProjectManager projectManager;
 
-    CreateProjectPanel(ProjectManager projectManager) {
-        this.projectManager = projectManager;
-
+    CreateProjectPanel() {
         initPanel();
         setButtons();
         setLabels();
@@ -109,7 +106,8 @@ class CreateProjectPanel extends JPanel {
             int rowsInt = Integer.parseInt(rows.getText());
 
             MainWindow mainWindow = new MainWindow(
-                    fileName = fileNameField.getText(), rows.getText() + "/7/" + fileName + "/0", rowsInt, projectManager);
+                    fileName = fileNameField.getText(), rows.getText() + "/7/" + fileName + "/0", rowsInt);
+            setVisible(false);
             System.out.println("Start window was closed");
 
             try {
@@ -118,10 +116,10 @@ class CreateProjectPanel extends JPanel {
                 ex.printStackTrace();
             }
             System.out.println("Main method was completed");
-            projectManager.setVisible(false);
+            mainWindow.setVisible(true);
         });
 
-        cancel.addActionListener(e -> projectManager.returnPanel());
+        cancel.addActionListener(e -> System.exit(0));
 
     }
 

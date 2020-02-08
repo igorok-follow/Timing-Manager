@@ -1,4 +1,6 @@
-package ml.javalearn.notifications.notifications;
+package ml.javalearn.notifications;
+
+import ml.javalearn.front.MainWindow;
 
 import java.awt.AWTException;
 import java.awt.Image;
@@ -8,11 +10,14 @@ import java.awt.TrayIcon;
 
 public class ShowNotification {
 
-    static void showNotification(String caption, String text, TrayIcon.MessageType type) {
+    private static void showNotification(String caption, String text, MainWindow mainWindow) {
         if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
             Image image = Toolkit.getDefaultToolkit().createImage("notification.png");
             TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
+            trayIcon.addActionListener(e -> {
+                mainWindow.setVisible(true);
+            });
             trayIcon.setImageAutoSize(true);
             trayIcon.setToolTip("System tray icon demo");
             try {
@@ -20,19 +25,11 @@ public class ShowNotification {
             } catch (AWTException e) {
                 e.printStackTrace();
             }
-            trayIcon.displayMessage(caption, text, type);
+            trayIcon.displayMessage(caption, text, TrayIcon.MessageType.INFO);
         }
     }
 
-    public static void showErrorNotification(String caption, String text) {
-        showNotification(caption, text, TrayIcon.MessageType.ERROR);
-    }
-
-    public static void showInfoNotification(String caption, String text) {
-        showNotification(caption, text, TrayIcon.MessageType.INFO);
-    }
-
-    public static void showWarningNotification(String caption, String text) {
-        showNotification(caption, text, TrayIcon.MessageType.WARNING);
+    public static void showInfoNotification(String caption, String text, MainWindow mainWindow) {
+        showNotification(caption, text, mainWindow);
     }
 }

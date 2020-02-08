@@ -1,7 +1,8 @@
 package ml.javalearn.components;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import java.awt.Font;
 
 public class Area extends JTextArea {
 

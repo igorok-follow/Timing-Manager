@@ -3,30 +3,43 @@ package ml.javalearn.front;
 import ml.javalearn.components.Field;
 import ml.javalearn.components.Panel;
 import ml.javalearn.components.Area;
-import ml.javalearn.notifications.notifications.ShowNotification;
+import ml.javalearn.notifications.ShowNotification;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.KeyboardFocusManager;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
 
-class MainWindow extends JFrame {
+public class MainWindow extends JFrame {
 
     private JPanel gridPanel, contentPanel;
     private JToolBar toolBar;
     private JToolBar toolBar1;
     private JButton settings, save, clearBtn;
-    private String[] time;
     private String saveDataForFields = "";
     private String saveDataForAreas = "";
-    private String wayToFieldsFile = "src/ml/javalearn/filesSaver/fields/";
-    private String wayToAreasFile  = "src/ml/javalearn/filesSaver/areas/";
 
     private int rows, panelsSize, textFieldsSize;
     private String fileName, data;
@@ -36,6 +49,7 @@ class MainWindow extends JFrame {
     private JTextField focusableField;
     private JButton acceptBtn = new JButton("Set timing");
     private JButton cancelBtn = new JButton("Cancel");
+    private ProjectManager projectManager;
     private FocusListener focusListener = new FocusListener() {
         @Override
         public void focusGained(FocusEvent e) {
@@ -50,7 +64,8 @@ class MainWindow extends JFrame {
     };
 
 
-    MainWindow(String fileName, String data, int rows) {
+    MainWindow(String fileName, String data, int rows, ProjectManager projectManager) {
+        this.projectManager = projectManager;
         this.fileName = fileName;
         this.rows = rows;
         this.data = data;
@@ -195,7 +210,9 @@ class MainWindow extends JFrame {
             }
         }
 
+        String wayToFieldsFile = "src/ml/javalearn/filesSaver/fields/";
         File fieldsFile = new File(wayToFieldsFile + fileName);
+        String wayToAreasFile = "src/ml/javalearn/filesSaver/areas/";
         File areasFile = new File(wayToAreasFile + fileName);
         FileWriter fieldFileWriter = new FileWriter(fieldsFile);
         fieldFileWriter.write(saveDataForFields);
@@ -206,9 +223,9 @@ class MainWindow extends JFrame {
         System.out.println("SAVED DATA:" + "\nFields: " + saveDataForFields + "\nAreas: " + saveDataForAreas);
         if (fieldsFile.exists() && !fieldsFile.isDirectory()
                 && areasFile.exists() && !areasFile.isDirectory()) {
-            JOptionPane.showMessageDialog(null, "Project saved");
+            JOptionPane.showMessageDialog(this, "Project saved");
         } else {
-            JOptionPane.showMessageDialog(null, "Error");
+            JOptionPane.showMessageDialog(this, "Error");
         }
     }
 
@@ -251,7 +268,7 @@ class MainWindow extends JFrame {
         toolBar1.add(clearBtn);
     }
 
-    void splitData(ArrayList fields, ArrayList areas) {
+    void splitData(ArrayList<String> fields, ArrayList<String> areas) {
         int amount = rows * 7;
 
         System.out.println("array list with saved fields: " + fields);
@@ -261,7 +278,7 @@ class MainWindow extends JFrame {
 
         for (int i = 0; i < amount * 2; i++) {
             if (fields.size() != 0) {
-                String fieldText = fields.get(i).toString();
+                String fieldText = fields.get(i);
                 textFields[i].setText(fieldText);
             }
         }
@@ -348,17 +365,18 @@ class MainWindow extends JFrame {
             }
             while (true) {
                 if (time.equals(getTime())) {
-                    ShowNotification.showInfoNotification("Notifications", "You asked me to notify you.");
+                    ShowNotification.showInfoNotification(
+                            "Notification", "You asked me to notify you.", getThisClass());
                     break;
                 } else {
                     try {
+                        System.out.println("not found");
                         Thread.sleep(59000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
-            System.out.println("OUT OF WHILES");
         });
         thread.start();
     }
@@ -372,8 +390,20 @@ class MainWindow extends JFrame {
         focusableField = (JTextField) KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
 
+    private int confirmClose() {
+        return JOptionPane.showConfirmDialog(this, "You want close window?");
+    }
+
     private void initFrame() {
-        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (confirmClose() == 0) {
+                    setVisible(false);
+                    projectManager.setVisible(true);
+                } 
+            }
+        });
         setSize(1150, 600);
         setMinimumSize(new Dimension(800, 600));
         setTitle("Timing Manager [" + fileName + "]");

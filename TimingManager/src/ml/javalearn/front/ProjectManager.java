@@ -2,11 +2,31 @@ package ml.javalearn.front;
 
 import ml.javalearn.back.Filter;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.MouseInputAdapter;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -19,6 +39,7 @@ class ProjectManager extends JFrame {
     private JTextArea descriptionArea;
     private int counter = 0;
     private final Filter filter = new Filter();
+    private Font fontForInfoPanels = new Font("Arial", Font.PLAIN, 16);
 
     ProjectManager() {
         setPanel();
@@ -28,6 +49,7 @@ class ProjectManager extends JFrame {
         setSecondaryComponents();
         setInfoPanel();
         setDevInfoPanel();
+        mainMethod();
     }
 
     private void setPanel() {
@@ -36,13 +58,39 @@ class ProjectManager extends JFrame {
         getContentPane().add(panel);
     }
 
+    void returnPanel() {
+        getContentPane().removeAll();
+        getContentPane().add(panel);
+        repaint();
+    }
+
+    private String readerForInfoPanels(String way) throws FileNotFoundException {
+        String fill = "";
+        File file = new File(way);
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNextLine()) {
+            fill += scanner.nextLine() + "\n";
+        }
+        return fill;
+    }
+
     private void setInfoPanel() {
         infoPanel = new JPanel();
         infoPanel.setLayout(null);
         JButton ok = new JButton("Ok");
         ok.setBounds(4, 433, 476, 25);
-        ok.addActionListener(e -> changePanel(infoPanel));
+        ok.addActionListener(e -> {
+            getContentPane().removeAll();
+            getContentPane().add(panel);
+            repaint();
+        });
         JTextArea info = new JTextArea();
+        info.setFont(fontForInfoPanels);
+        try {
+            info.setText(readerForInfoPanels("src/ml/javalearn/descriptions/infoInProjectManager/infoAboutApp"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         JScrollPane scrollPane = new JScrollPane(info);
         scrollPane.setBounds(5, 0, 474, 433);
 
@@ -55,9 +103,18 @@ class ProjectManager extends JFrame {
         devInfoPanel.setLayout(null);
         JButton ok = new JButton("Ok");
         ok.setBounds(4, 433, 476, 25);
-        ok.addActionListener(e -> changePanel(devInfoPanel));
+        ok.addActionListener(e -> {
+            getContentPane().removeAll();
+            getContentPane().add(panel);
+            repaint();
+        });
         JTextArea info = new JTextArea();
-        info.setText("Dev info panel");
+        info.setFont(fontForInfoPanels);
+        try {
+            info.setText(readerForInfoPanels("src/ml/javalearn/descriptions/infoInProjectManager/infoAboutDev"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         JScrollPane scrollPane = new JScrollPane(info);
         scrollPane.setBounds(5, 0, 474, 433);
 
@@ -74,7 +131,8 @@ class ProjectManager extends JFrame {
             counter = 1;
         } else {
             getContentPane().removeAll();
-            getContentPane().add(this.panel);
+            getContentPane().add(panel);
+            revalidate();
             setResizable(true);
             counter = 0;
         }
@@ -137,7 +195,7 @@ class ProjectManager extends JFrame {
         descriptionArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(descriptionArea);
         descriptionArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        descriptionArea.setFont(new Font("Times new Roman", Font.PLAIN, 14));
+        descriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
         scrollPane.setBounds(243, 75, 231, 255);
         panel.add(scrollPane);
     }
@@ -151,9 +209,9 @@ class ProjectManager extends JFrame {
         fileWriter.write(descriptionArea.getText());
         fileWriter.close();
         if(file.exists() && !file.isDirectory()) {
-            JOptionPane.showMessageDialog(null, "File saved successfully");
+            JOptionPane.showMessageDialog(this, "File saved successfully");
         } else {
-            JOptionPane.showMessageDialog(null, "Error! File not saved");
+            JOptionPane.showMessageDialog(this, "Error! File not saved");
         }
     }
 
@@ -199,7 +257,7 @@ class ProjectManager extends JFrame {
         int rowsInt = Integer.parseInt(splitFile.get(0));
         int amount = 7 * rowsInt;
         System.out.println("selected index " + list.getSelectedValue());
-        MainWindow mainWindow = new MainWindow(file.getName(), null, rowsInt);
+        MainWindow mainWindow = new MainWindow(file.getName(), null, rowsInt, this);
         System.out.println("data transferred: " + "\namount a panels: " + amount + "\nRows: " + rowsInt);
 
         try {
@@ -236,6 +294,7 @@ class ProjectManager extends JFrame {
         }
 
         updateList();
+        setVisible(false);
     }
 
     private void setSecondaryComponents() {
@@ -274,14 +333,18 @@ class ProjectManager extends JFrame {
 
         cancel.addActionListener(e -> System.exit(0));
 
-        String way = "src\\ml\\javalearn\\filesSaver\\";
+        String way = "src/ml/javalearn/filesSaver/";
         delete.addActionListener(e -> {
             System.gc();
             File file = new File(String.valueOf(list.getSelectedValue()));
             System.out.println(list.getSelectedValue());
-            File areas = new File(way + "areas\\" + file.getName());
-            File fields = new File(way + "fields\\" + file.getName());
-            if (file.delete() && areas.delete() && fields.delete()) {
+            File areas = new File(way + "areas/" + file.getName());
+            File fields = new File(way + "fields/" + file.getName());
+            File descFile = new File("src/ml/javalearn/descriptions/" + file.getName());
+            if (file.delete()) {
+                descFile.delete();
+                fields.delete();
+                areas.delete();
                 updateList();
                 descriptionArea.setText("");
                 JOptionPane.showMessageDialog(null, "Timing was deleted");
@@ -293,13 +356,14 @@ class ProjectManager extends JFrame {
 
         create.addActionListener(e -> {
             getContentPane().removeAll();
-            getContentPane().add(new CreateProjectPanel());
+            getContentPane().add(new CreateProjectPanel(this));
             revalidate();
         });
 
         accept.addActionListener(e -> {
             try {
                 openProject();
+                dispose();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -323,13 +387,13 @@ class ProjectManager extends JFrame {
         panel.add(saveD);
     }
 
-    void mainMethod() {
+    private void mainMethod() {
         initFrame();
         setVisible(true);
     }
 
     private void initFrame() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setTitle("Open Timing List");
         setSize(new Dimension(500, 523));
         setLocation(100, 100);

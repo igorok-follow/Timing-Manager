@@ -21,7 +21,7 @@ class SetNotificationTimePanel extends JPanel {
         public void keyReleased(KeyEvent e) {
             try {
                 int num  = Integer.parseInt(hoursField.getText());
-                invalidNumber.setText("");
+                invalidNumber.setText("format: from 0 to 23 hours");
             } catch (Exception ex) {
                 invalidNumber.setText("Invalid number");
             }
@@ -32,7 +32,7 @@ class SetNotificationTimePanel extends JPanel {
         public void keyReleased(KeyEvent e) {
             try {
                 int num = Integer.parseInt(minutesField.getText());
-                invalidNumber1.setText("");
+                invalidNumber1.setText("format: from 0 to 59 minutes");
             } catch (Exception ex) {
                 invalidNumber1.setText("Invalid number");
             }
