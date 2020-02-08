@@ -185,10 +185,8 @@ class ProjectManager extends JFrame {
     }
 
     private void updateList() {
-        System.out.println("Start updating list");
         fillList();
         list.setModel(defaultListModel);
-        System.out.println("List was updated");
     }
 
     private void setDescriptionArea() {
@@ -221,9 +219,7 @@ class ProjectManager extends JFrame {
             String fileName = list.getSelectedValue().toString();
             String[] files;
             files = fileName.split("/", 5);
-            System.out.println("Splitted");
             File file = new File(files[files.length-1]);
-            System.out.println("File created");
             File file1 = new File("src/ml/javalearn/descriptions/" + file.getName());
             FileReader fileReader = new FileReader(file1);
             Scanner scanner = new Scanner(fileReader);
@@ -232,33 +228,22 @@ class ProjectManager extends JFrame {
                 s += scanner.nextLine() + "\n";
             }
             fileReader.close();
-            System.out.println("file scan...");
             descriptionArea.setText(s);
-            System.out.println("desc text was set\n .........................");
-        } catch (IOException ex) {
-            System.out.println("desc file no found\n .........................");
-        }
+        } catch (IOException ignored) {}
     }
 
     private void openProject() throws IOException {
         FileReader fileReader;
         Scanner sc;
-        System.out.println("Start opening project...");
         String fileName = list.getSelectedValue().toString();
-        System.out.println("filename:" + fileName);
         File file = new File(fileName);
-        System.out.println("File created");
         Scanner scanner = new Scanner(file);
         String fileFill = scanner.nextLine();
         ArrayList<String> splitFile = new ArrayList<>(Arrays.asList(fileFill.split("/", 4)));
-        System.out.println(splitFile);
 
-        System.out.println("Start creating Project Window...");
         int rowsInt = Integer.parseInt(splitFile.get(0));
         int amount = 7 * rowsInt;
-        System.out.println("selected index " + list.getSelectedValue());
         MainWindow mainWindow = new MainWindow(file.getName(), null, rowsInt, this);
-        System.out.println("data transferred: " + "\namount a panels: " + amount + "\nRows: " + rowsInt);
 
         try {
             File file1 = new File("src/ml/javalearn/filesSaver/fields/" + file.getName());
@@ -268,7 +253,6 @@ class ProjectManager extends JFrame {
             while (sc.hasNextLine()) {
                 fieldsFill += sc.nextLine() + "\n";
             }
-            System.out.println("fill of fields:" + fieldsFill);
 
             File file2 = new File("src/ml/javalearn/filesSaver/areas/" + file.getName());
             fileReader = new FileReader(file2);
@@ -277,21 +261,15 @@ class ProjectManager extends JFrame {
             while (sc.hasNextLine()) {
                 areasFill += sc.nextLine() + "\n";
             }
-            System.out.println("fill of areas: " + areasFill);
-            System.out.println("scanned");
-
             ArrayList<String> fieldsList = new ArrayList<>(
                     Arrays.asList(fieldsFill.split("/", amount * 2)));
             ArrayList<String> areasList = new ArrayList<>(
                     Arrays.asList(areasFill.split("/", amount)));
-            System.out.println("fl" + fieldsList + "\nal" + areasList);
             if (Integer.parseInt(splitFile.get(3)) == 0) {
                 mainWindow.fillFilesOnStart();
             }
             mainWindow.splitData(fieldsList, areasList);
-        } catch (FileNotFoundException ex) {
-            System.out.println("file not found");
-        }
+        } catch (FileNotFoundException ignored) {}
 
         updateList();
         setVisible(false);
@@ -337,7 +315,6 @@ class ProjectManager extends JFrame {
         delete.addActionListener(e -> {
             System.gc();
             File file = new File(String.valueOf(list.getSelectedValue()));
-            System.out.println(list.getSelectedValue());
             File areas = new File(way + "areas/" + file.getName());
             File fields = new File(way + "fields/" + file.getName());
             File descFile = new File("src/ml/javalearn/descriptions/" + file.getName());

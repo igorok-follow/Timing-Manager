@@ -10,7 +10,6 @@ public class Main {
             InstantiationException, IllegalAccessException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        System.out.println("Start logs: \n");
         SwingUtilities.invokeLater(ProjectManager::new);
     }
 

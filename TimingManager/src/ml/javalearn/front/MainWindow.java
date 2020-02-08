@@ -47,17 +47,14 @@ public class MainWindow extends JFrame {
     private JPanel[] panels;
     private Area[] areas;
     private JTextField focusableField;
-    private JButton acceptBtn = new JButton("Set timing");
-    private JButton cancelBtn = new JButton("Cancel");
     private ProjectManager projectManager;
     private FocusListener focusListener = new FocusListener() {
         @Override
         public void focusGained(FocusEvent e) {
-            System.out.println("focus gained\n ................");
             getFocusableField();
             Point p = MouseInfo.getPointerInfo().getLocation();
             textFields[0].requestFocus();
-            new TimingWindow(p.x, p.y, fileName, getThisClass());
+            new TimingWindow(p.x, p.y, getThisClass());
         }
         @Override
         public void focusLost(FocusEvent e) {}
@@ -77,17 +74,11 @@ public class MainWindow extends JFrame {
 
     private void mainMethod() {
         initFrame();
-        System.out.println("init frame");
         setToolBar();
-        System.out.println("set tool bar");
         setContentPanel();
-        System.out.println("set content panel");
         setGridPanel();
-        System.out.println("set grid panel");
         setSecondaryComponents();
-        System.out.println("set scndr components");
         setActions();
-        System.out.println("set editables");
     }
 
     private MainWindow getThisClass() {
@@ -96,11 +87,9 @@ public class MainWindow extends JFrame {
 
     void createProject() throws IOException {
         FileWriter writer = new FileWriter("src/ml/javalearn/tables/" + fileName);
-        System.out.println(data);
         writer.write(data);
         writer.flush();
         writer.close();
-        System.out.println("project was created");
     }
 
     private void setContentPanel() {
@@ -137,45 +126,26 @@ public class MainWindow extends JFrame {
 
     private void spawnPanels() {
         panels = new JPanel[panelsSize];
-        int counter = 0;
-        System.out.println("\nSpawning Panels...");
-        System.out.println("Number of transferred rows: " + rows);
-        System.out.println("Number of transferred cols: 7");
-        System.out.println("Number of will spawned cells: " + panels.length);
 
         for (int i = 0; i < panels.length; i++) {
             Panel panelss = new Panel();
             panels[i] = panelss;
             gridPanel.add(panelss);
-            counter++;
-            System.out.println(counter + " cycle was passed");
         }
-
-        System.out.println("\nPanels was spawned");
-        System.out.println("Completed");
     }
 
     private void spawnFields() {
         textFields = new JTextField[textFieldsSize];
         areas = new Area[panelsSize];
         int counter = 0;
-        System.out.println("Amount of will spawned fields: " +  rows * 14);
-
-        System.out.println("Fill the textFields array: \n");
         for (int i = 0; i <  rows * 14; i++) {
             Field field = new Field();
             textFields[i] = field;
         }
-
-        System.out.println("Fields was loaded");
-
         for (int i = 0; i < rows * 7; i++) {
             Area area = new Area();
             areas[i] = area;
         }
-
-        System.out.println("Areas was loaded");
-
         for (int i = 0; i < rows * 7; i++) {
             panels[i].add(textFields[counter]);
             counter++;
@@ -186,14 +156,10 @@ public class MainWindow extends JFrame {
 
             panels[i].add(areas[i].addScroll());
         }
-
-        System.out.println("\nTextFields was spawned");
     }
 
 
     private void saveProject() throws IOException {
-        System.out.println("SAVING PROJECT. START FILL 'SAVEDATA'");
-
         for (int i = 0; i < textFields.length; i++) {
             if (i == textFields.length - 1) {
                 saveDataForFields += textFields[i].getText();
@@ -220,7 +186,6 @@ public class MainWindow extends JFrame {
         FileWriter areasFileWriter = new FileWriter(areasFile);
         areasFileWriter.write(saveDataForAreas);
         areasFileWriter.close();
-        System.out.println("SAVED DATA:" + "\nFields: " + saveDataForFields + "\nAreas: " + saveDataForAreas);
         if (fieldsFile.exists() && !fieldsFile.isDirectory()
                 && areasFile.exists() && !areasFile.isDirectory()) {
             JOptionPane.showMessageDialog(this, "Project saved");
@@ -271,26 +236,18 @@ public class MainWindow extends JFrame {
     void splitData(ArrayList<String> fields, ArrayList<String> areas) {
         int amount = rows * 7;
 
-        System.out.println("array list with saved fields: " + fields);
-        System.out.println("array list with saved areas: " + areas);
-
-        System.out.println("START SETTING TEXTS");
-
         for (int i = 0; i < amount * 2; i++) {
             if (fields.size() != 0) {
                 String fieldText = fields.get(i);
                 textFields[i].setText(fieldText);
             }
         }
-
         for (int i = 0; i < amount; i++) {
             if (areas.size() != 0) {
-                String areaText = areas.get(i).toString();
+                String areaText = areas.get(i);
                 this.areas[i].setText(areaText);
             }
         }
-
-        System.out.println("END OF SETTING TEXTS");
     }
 
     private void setActions()  {
@@ -302,14 +259,6 @@ public class MainWindow extends JFrame {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        });
-
-        acceptBtn.addActionListener(e -> {
-
-        });
-
-        cancelBtn.addActionListener(e -> {
-
         });
 
         clearBtn.addActionListener(e -> {
@@ -370,7 +319,6 @@ public class MainWindow extends JFrame {
                     break;
                 } else {
                     try {
-                        System.out.println("not found");
                         Thread.sleep(59000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -382,7 +330,6 @@ public class MainWindow extends JFrame {
     }
 
     void refreshTimingField(String date) {
-        System.out.println("REFRESHED DATE: " + date);
         focusableField.setText(date);
     }
 

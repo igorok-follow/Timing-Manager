@@ -5,11 +5,10 @@ import com.toedter.calendar.JCalendar;
 import javax.swing.*;
 import java.awt.*;
 
-public class SetNotificationDatePanel extends JPanel {
+class SetNotificationDatePanel extends JPanel {
 
     private int x, y, width, height;
     private JCalendar calendar;
-    private JLabel titleLabel;
 
     SetNotificationDatePanel(int x, int y, int width, int height) {
         this.x = x;
@@ -23,7 +22,7 @@ public class SetNotificationDatePanel extends JPanel {
     }
 
     private void setTitleLabel() {
-        titleLabel = new JLabel("Set date of notification");
+        JLabel titleLabel = new JLabel("Set date of notification");
         titleLabel.setBounds(50, 10, 250, 40);
         add(titleLabel);
     }

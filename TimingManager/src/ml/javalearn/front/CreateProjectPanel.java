@@ -110,14 +110,12 @@ class CreateProjectPanel extends JPanel {
 
             MainWindow mainWindow = new MainWindow(
                     fileName = fileNameField.getText(), rows.getText() + "/7/" + fileName + "/0", rowsInt, projectManager);
-            System.out.println("Start window was closed");
 
             try {
                 mainWindow.createProject();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            System.out.println("Main method was completed");
             projectManager.setVisible(false);
         });
 

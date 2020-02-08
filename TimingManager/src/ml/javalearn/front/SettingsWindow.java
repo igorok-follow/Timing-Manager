@@ -22,8 +22,6 @@ class SettingsWindow extends JFrame {
     private JRadioButton changeThemeRadio;
     private JButton applyChangesBtn, declineChangesBtn;
 
-    private int[] fontSizes = new int[10];
-
     SettingsWindow() {
         initFrame();
         setContentPanel();
@@ -66,9 +64,7 @@ class SettingsWindow extends JFrame {
     }
 
     private void setActions() {
-        changeThemeRadio.addActionListener(e -> {
-            changeTheme();
-        });
+        changeThemeRadio.addActionListener(e -> changeTheme());
     }
 
     private void setContentPanel() {

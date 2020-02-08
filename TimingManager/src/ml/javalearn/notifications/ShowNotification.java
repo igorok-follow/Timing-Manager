@@ -15,9 +15,7 @@ public class ShowNotification {
             SystemTray tray = SystemTray.getSystemTray();
             Image image = Toolkit.getDefaultToolkit().createImage("notification.png");
             TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
-            trayIcon.addActionListener(e -> {
-                mainWindow.setVisible(true);
-            });
+            trayIcon.addActionListener(e -> mainWindow.setVisible(true));
             trayIcon.setImageAutoSize(true);
             trayIcon.setToolTip("System tray icon demo");
             try {

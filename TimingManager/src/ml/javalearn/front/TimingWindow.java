@@ -6,39 +6,23 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.Arrays;
-import java.util.Properties;
 
 class TimingWindow {
-
-    public static void main(String[] args) throws ClassNotFoundException,
-            UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        SwingUtilities.invokeLater(() -> {
-            new TimingWindow(100, 100, "testName", null);
-        });
-    }
 
     private JButton setTimingBtn, cancelBtn;
     private JPanel contentPanel;
     private int x, y, monthCounter;
     private String[] dateParts;
     private JFrame frame = new JFrame("Set time of notification");
-    private String fileName;
     private MainWindow mainWindow;
     private SetNotificationTimePanel setNotificationTimePanel;
     private SetNotificationDatePanel setNotificationDatePanel;
     private String savedData;
 
-    private Font FONT_FOR_BUTTONS;
-    
-    TimingWindow(int x, int y, String fileName, MainWindow mainWindow) {
+    TimingWindow(int x, int y, MainWindow mainWindow) {
         this.x = x;
         this.y = y;
-        this.fileName = fileName;
         this.mainWindow = mainWindow;
         init();
     }
@@ -52,11 +36,9 @@ class TimingWindow {
     private void addComponents() {
         setTimingBtn = new JButton("Next");
         setTimingBtn.setBounds(13, 202, 122, 20);
-        setTimingBtn.setFont(FONT_FOR_BUTTONS);
 
         cancelBtn = new JButton("Cancel");
         cancelBtn.setBounds(135, 202, 122, 20);
-        cancelBtn.setFont(FONT_FOR_BUTTONS);
 
         setNotificationTimePanel = new SetNotificationTimePanel(278, 0, 241, 170);
         setNotificationDatePanel = new SetNotificationDatePanel(0, 0, 271, 200);
@@ -130,9 +112,7 @@ class TimingWindow {
     }
 
     private void splitAndSelectCalendarData(String date) {
-        System.out.println(date);
         dateParts = date.split(" ", 6);
-        System.out.println(Arrays.asList(dateParts));
         switch (dateParts[1]) {
             case "Jan":
                 monthCounter = 1;
@@ -171,9 +151,7 @@ class TimingWindow {
                 monthCounter = 12;
                 break;
             default:
-                System.out.println("none");
         }
-        System.out.println(monthCounter);
     }
 
     private void setListeners() {
